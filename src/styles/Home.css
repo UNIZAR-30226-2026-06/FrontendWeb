@@ -1,0 +1,324 @@
+/* --- RESET Y BASE --- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.home-screen {
+  background-color: #1a1c4d;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow: hidden;
+}
+
+/* --- CONTENEDOR PRINCIPAL --- */
+.main-card {
+  background-color: #3b408e;
+  width: 100vw;      
+  height: 100vh;     
+  max-width: none;  
+  max-height: none; 
+  border-radius: 0; 
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- HEADER (TOP BAR) --- */
+.top-bar {
+  background-color: #272c7b;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 13px 30px; /* arriba y abajo, izq y der */
+  flex-shrink: 0; 
+}
+
+.logo-img {
+  height: clamp(60px, 3vh, 50px);
+  width: auto;
+  display: block;
+}
+
+.user-stats {
+  display: flex;
+  gap: 20px;
+}
+
+.stat {
+  background: rgba(16, 15, 15, 0.3);
+  padding: 10px 25px;
+  border-radius: 12px;
+  font-weight: bold;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.clickable-user {
+  background: rgba(0, 0, 0, 0.3); 
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: bold;
+  padding: 5px 30px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.clickable-user:hover {
+  background: rgba(255, 255, 255, 0.15); 
+  transform: translateY(-1px);
+}
+
+.clickable-user:active {
+  transform: translateY(0);
+  filter: brightness(0.8);
+}
+
+.coins { background: #ffcc00; color: #000; }
+
+/* --- CUERPO DE LA APP --- */
+.home-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly; 
+  align-items: center;
+  padding: 2vh 5vw;            
+  gap: 2vh; 
+  overflow: hidden;
+}
+
+h1 { 
+  font-size: clamp(1.2rem, 4vh, 2.5rem); 
+  margin: 0; 
+}
+.subtitle { 
+  font-size: clamp(0.8rem, 2vh, 1rem);
+  opacity: 0.9;
+}
+
+/* --- CARRUSEL (2 MODOS SIEMPRE) --- */
+.carousel-wrapper {
+  flex: 2;                     
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  width: 100%;
+  padding: 0 10px;
+}
+
+.modes-container {
+  display: flex;
+  gap: 20px; 
+  overflow-x: auto; 
+  scroll-behavior: smooth;
+  padding: 10px 0;
+  width: 100%;
+  scrollbar-width: none;
+  scroll-snap-type: x mandatory;
+  -ms-overflow-style: none;
+}
+
+.modes-container::-webkit-scrollbar { display: none; }
+
+.mode-card {
+  background: #2a2d6e;
+  flex: 0 0 calc(50% - 10px); 
+  width: calc(50% - 10px); 
+  height: 100%;        
+  max-height: 380px;   
+  min-height: 250px; 
+  padding: 2vh 20px; 
+  border-radius: 30px; 
+  display: flex;
+  flex-direction: column;
+  scroll-snap-align: start;
+}
+
+.mode-header {
+  display: flex;
+  align-items: center; 
+  gap: 10px;         
+  margin-bottom: 15px;
+}
+
+.mode-icon {
+  font-size: 1.5rem;   
+  line-height: 1;      
+}
+
+.mode-header h3 {
+  margin: 0;           
+  font-size: clamp(0.9rem, 2.5vh, 1.3rem);
+  line-height: 1.2;
+  overflow: visible;    
+  word-break: break-word; 
+}
+
+.mode-card p {
+  font-size: 0.95rem;
+  line-height: 1.4;
+  margin-top: 10px;
+  margin-bottom: auto; 
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* --- BOTONES DE JUEGO --- */
+.mode-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+  width: 100%;
+}
+
+button {
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.2s;
+  border-radius: 12px;
+}
+
+.mode-buttons button {
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  border-radius: 12px;
+  flex: 1;
+  padding: clamp(6px, 1vh, 12px) clamp(8px, 1vw, 16px);
+  font-size: clamp(0.7rem, 1.5vw, 1rem);
+  white-space: normal;
+  text-align: center;
+  transition: all 0.2s ease;
+  min-width: 0;
+}
+
+.btn-public { background: #63c76a; color: white; }
+.btn-private { background: #3026ff; color: white; }
+
+.btn-public:hover { background: #52a858; transform: translateY(-2px); }
+.btn-private:hover { background: #251dcb; transform: translateY(-2px); }
+
+.mode-buttons button:active {
+  transform: translateY(0);    
+  filter: brightness(0.9);    
+  outline: none;
+}
+
+.mode-buttons button:focus {
+  outline: none;               
+}
+
+.nav-arrow {
+  background: none;
+  color: white;
+  font-size: 2.5rem; 
+  opacity: 0.4;
+  flex-shrink: 0;
+  transition: transform 0.1s, opacity 0.1s; 
+  outline: none; 
+  border: none;
+  box-shadow: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  z-index: 10;
+  padding: 10px;
+}
+
+.nav-arrow:hover { opacity: 1; transform: scale(1.1); }
+
+.nav-arrow:active {
+  opacity: 1;
+  transform: scale(2);
+  color: #1269c0;
+}
+
+.nav-arrow:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+/* --- FOOTER (NAV INFERIOR) --- */
+.bottom-nav {
+  display: flex;
+  justify-content: center; 
+  gap: 20px;               
+  padding: 20px 0;         
+  background: transparent;
+  flex-shrink: 0;
+  width: 100%;      
+  margin: auto auto 20px auto; 
+}
+
+.nav-item {
+  background-color: #2a2d6e; 
+  color: white;
+  padding: 10px 15px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex: 1;                 
+  border-radius: 20px;     
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); 
+}
+
+.nav-item:hover {
+  background-color: #12164d;
+  transform: translateY(-2px); 
+}
+
+.nav-item:active {
+  transform: translateY(0);
+  background-color: #1e2150;
+  outline: none;
+}
+
+.nav-icon { 
+  font-size: 1.5rem; 
+  display: flex;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .mode-buttons button {
+    padding: 8px;
+    font-size: 0.8rem;
+  }
+
+  .nav-item {
+    padding: 6px 10px;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .mode-buttons button {
+    padding: 6px;
+    font-size: 0.7rem;
+  }
+
+  .nav-item {
+    padding: 5px 8px;
+    font-size: 0.7rem;
+  }
+}
