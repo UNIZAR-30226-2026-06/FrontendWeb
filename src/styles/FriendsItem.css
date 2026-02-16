@@ -1,0 +1,116 @@
+.friend-item-row {
+  background-color: rgba(255, 255, 255, 0.05); 
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  padding: 12px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: background 0.3s ease;
+}
+
+.friend-item-row:hover {
+  background-color: rgba(255, 255, 255, 0.1); 
+}
+
+.friend-info-group {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.avatar-container {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  background-color: rgba(194, 194, 194, 0.2);  
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar-emoji {
+  font-size: 2.5rem;
+}
+
+.status-dot-overlay {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 3px solid white;
+}
+
+.friend-text-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.friend-name-top {
+  font-size: clamp(14px, 2.5vw, 18px);
+  font-weight: 700;
+  color: rgba(239, 239, 239, 0.803);
+  margin-bottom: 2px;
+}
+
+.friend-details-bottom {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: clamp(11px, 2vw, 14px);
+  color: #7f8c8d; 
+}
+
+.separator-dot {
+  color: #bdc3c7;
+}
+
+.btn-delete-small {
+  background: #ff4040c5;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: transform 0.2s;
+}
+
+.btn-delete-small:hover {
+  background: #ff4757;
+  transform: scale(1.05);
+}
+
+.btn-add-friend {
+  background-color: #2ecc71; 
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: transform 0.2s;
+}
+
+.btn-add-friend:hover {
+  background-color: #27ae60;
+  transform: scale(1.05); 
+}
+
+.btn-delete-small,
+.btn-add-friend {
+  font-size: clamp(11px, 2vw, 14px);
+  padding: clamp(6px, 1.5vw, 8px) clamp(10px, 2vw, 16px);
+}

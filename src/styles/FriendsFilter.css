@@ -1,0 +1,27 @@
+.friends-filter-container {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap; 
+  outline: none;
+}
+
+.friends-filter-container .filter-btn{
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: white;
+  padding: clamp(6px, 1.5vw, 15px) clamp(14px, 3vw, 27px);
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: clamp(12px, 2vw, 15px);
+  outline: none;
+}
+
+.filter-btn:hover {
+  background: #3b408e;
+}
+
+.filter-btn.active {
+  background: #3b42ff;
+  box-shadow: 0 0 8px rgba(59, 66, 255, 0.4);
+}
