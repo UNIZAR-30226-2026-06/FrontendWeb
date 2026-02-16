@@ -1,0 +1,40 @@
+.search-bar-container {
+  display: flex;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 10px 15px;
+  margin-bottom: 20px;
+}
+
+.search-icon {
+  margin-right: 10px;
+  opacity: 0.6;
+}
+
+.friends-search-input {
+  background: transparent;
+  border: none;
+  color: white;
+  width: 100%;
+  outline: none;
+  font-size: 1rem;
+}
+
+.friends-search-input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.btn-clear-search {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0 5px;
+}
+
+.btn-clear-search:hover {
+  color: white;
+}

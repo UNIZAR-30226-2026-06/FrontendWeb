@@ -1,0 +1,109 @@
+.home-screen {
+  background-color: #3b408e;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Segoe UI', sans-serif;
+}
+.main-card-profile-layout {
+  position: relative;
+  background-color: #1d1f56;
+  width: 90vw;       
+  height: 85vh;      
+  border-radius: 20px;
+  display: flex;     
+  overflow: hidden;
+}
+
+.shop-container {
+  padding: 2vh 4vw; 
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.profile-header {
+  position: relative;
+}
+
+.shop-title-section {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.shop-main-icon {
+  font-size: 2.5rem;
+}
+
+.shop-header-actions {
+  position: absolute;
+  top: -2vh;
+  right: -4vw;
+  display: flex;
+  align-items: center;
+  gap: 15px; 
+  height: 45px; 
+  z-index: 10; 
+}
+
+.stat-pill.coins-pill {
+  background: #ffcc00; 
+  color: #000;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 2vw;
+  border-radius: 12px 12px 12px 12px; 
+  height: 100%; 
+  font-size: clamp(0.7rem, 1.5vw, 1rem);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.btn-back-shop {
+  background: rgba(0, 0, 0, 0.2);
+  color: white;
+  border: none;
+  padding: 8px 20px;   
+  border-radius: 0px 20px 0px 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: bold;
+  height: 45px;        
+  transition: all 0.2s;
+}
+
+.btn-back-shop:hover {
+  background: #3b408e; 
+}
+
+.shop-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+  gap: 25px;
+  align-content: start;
+  flex: 1;      
+  scrollbar-width: none; 
+  -ms-overflow-style: none;
+}
+
+.shop-grid::-webkit-scrollbar {
+  display: none;
+}
+
+@media (max-width: 480px) {
+  .shop-grid {
+    grid-template-columns: 1fr; 
+    gap: 15px;
+  }
+  
+  .shop-header-actions {
+    gap: 5px; 
+  }
+}
