@@ -1,0 +1,61 @@
+/* --- FOOTER (NAV INFERIOR) --- */
+.bottom-nav {
+  display: flex;
+  justify-content: center; 
+  gap: 20px;               
+  padding: 20px 0;         
+  background: transparent;
+  flex-shrink: 0;
+  width: 100%;      
+  margin: auto auto 20px auto; 
+}
+
+.nav-item {
+  background-color: #2a2d6e; 
+  color: white;
+  padding: 10px 15px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex: 1;                 
+  border-radius: 20px;     
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); 
+}
+
+.nav-item:hover {
+  background-color: #12164d;
+  transform: translateY(-2px); 
+}
+
+.nav-item:active {
+  transform: translateY(0);
+  background-color: #1e2150;
+  outline: none;
+}
+
+.nav-icon { 
+  font-size: 1.5rem; 
+  display: flex;
+  align-items: center;
+}
+
+/* --- RESPONSIVE ESPECÍFICO DEL NAV --- */
+@media (max-width: 768px) {
+  .nav-item {
+    padding: 6px 10px;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-item {
+    padding: 5px 8px;
+    font-size: 0.7rem;
+  }
+}
