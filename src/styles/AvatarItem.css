@@ -1,0 +1,30 @@
+.avatar-item {
+  appearance: none;
+  background-color: rgba(255, 255, 255, 0.05); 
+  border: 2px solid transparent;
+  border-radius: 15px;
+  width: 65px;
+  height: 65px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  outline: none;
+}
+
+.avatar-item:hover {
+  background-color: rgba(255, 255, 255, 0.1); 
+  transform: translateY(-3px);
+}
+
+.avatar-item.active {
+  background-color: #3b42ff;   
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(59, 66, 255, 0.7);
+}
+
+.avatar-item:focus {
+  outline: none; 
+}

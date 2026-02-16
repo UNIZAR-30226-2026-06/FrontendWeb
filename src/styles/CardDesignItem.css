@@ -1,0 +1,38 @@
+.card-design-btn {
+  appearance: none;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 2px solid transparent;
+  border-radius: 12px;
+  padding: 10px 25px;
+  min-width: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: white;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  outline: none;
+  margin: 5px; 
+}
+
+.card-design-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+.card-design-btn.active {
+  background-color: #3b42ff; 
+  box-shadow: 0 0 12px rgba(59, 66, 255, 0.4); 
+}
+
+.design-selector-container {
+  padding-bottom: 10px; 
+  overflow: visible !important; 
+}
+
+.card-design-btn:focus {
+  outline: none;
+}

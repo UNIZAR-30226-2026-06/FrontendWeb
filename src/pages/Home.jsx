@@ -1,6 +1,8 @@
 import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import logoImg from "../img/logo.png";
+import GameModeCard from "../components/GameModeCard";
+import HomeNavigation from "../components/HomeNavigation";
 import "../styles/Home.css";
 
 const MODES = [
@@ -16,7 +18,7 @@ export default function Home() {
 
   const scroll = (direction) => {
     if (scrollRef.current) {
-      const card = scrollRef.current.querySelector(".mode-card");
+      const card = scrollRef.current.querySelector(".game-card-container");
       if (card) {
         const cardWidth = card.offsetWidth; 
         const gap = 20;
@@ -50,39 +52,36 @@ export default function Home() {
 
           {/* Carrusel */}
           <div className="carousel-wrapper">
-            <button className="nav-arrow" onClick={() => scroll(-1)}>❮</button>
+            <button className="button-3d" onClick={() => scroll(-1)}>
+              <div className="button-top">
+                <span className="nav-icon-3d">❮</span>
+              </div>
+              <div className="button-bottom"></div>
+              <div className="button-base"></div>
+            </button>
             
             <div className="modes-container" ref={scrollRef}>
               {MODES.map((m, i) => (
-                <div key={i} className="mode-card">
-                  <div className="mode-header">
-                    <span className="mode-icon">{m.icon}</span>
-                    <h3>{m.title}</h3>
-                  </div>
-                  <p>{m.desc}</p>
-                  <div className="mode-buttons">
-                    <button className="btn-public" onClick={() => navigate("/game")}>Partida pública</button>
-                    <button className="btn-private" onClick={() => navigate("/game")}>Partida privada</button>
-                  </div>
-                </div>
+                <GameModeCard 
+                  key={i} 
+                  mode={m} 
+                  onPublic={() => navigate("/game")} 
+                  onPrivate={() => navigate("/game")}
+                />
               ))}
             </div>
 
-            <button className="nav-arrow" onClick={() => scroll(1)}>❯</button>
+            <button className="button-3d" onClick={() => scroll(1)}>
+              <div className="button-top">
+                <span className="nav-icon-3d">❯</span>
+              </div>
+              <div className="button-bottom"></div>
+              <div className="button-base"></div>
+            </button>
           </div>
 
           {/* Menú Inferior */}
-          <footer className="bottom-nav">
-            <button className="nav-item">
-              <span className="nav-icon">👥</span> Amigos
-            </button>
-            <button className="nav-item">
-              <span className="nav-icon">🏪</span> Tienda
-            </button>
-            <button className="nav-item">
-              <span className="nav-icon">👤</span> Perfil
-            </button>
-          </footer>
+          <HomeNavigation />
         </div>
       </div>
     </div>
