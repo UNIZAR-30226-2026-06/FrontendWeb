@@ -65,3 +65,27 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+[data-sonner-toast][data-type="success"] {
+  background: #ecfdf5 !important;
+  color: #059669 !important;
+  border: 2px solid #059669 !important; 
+  box-shadow: 4px 4px 0px #059669 !important; 
+}
+
+[data-sonner-toast][data-type="error"] {
+  background: #fff1f2 !important;
+  color: #e11d48 !important;
+  border: 2px solid #e11d48 !important; 
+  box-shadow: 4px 4px 0px #e11d48 !important; 
+}
+
+[data-sonner-toast] [data-description] {
+  color: #757575 !important; /* El tono de gris de tus campos */
+  font-weight: 600 !important;
+  opacity: 1 !important;
+}
+
+[data-sonner-toaster] {
+  padding: 15px !important;
+}

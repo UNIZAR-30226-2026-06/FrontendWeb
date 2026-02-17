@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 import FriendsFilter from "../components/FriendsFilter";
 import FriendItem from "../components/FriendsItem"; 
 import ConfirmModal from "../components/ConfirmModal";
@@ -43,6 +44,17 @@ const Friends = () => {
   };
 
   const handleConfirm = () => {
+    if (modalMode === "add") {
+      toast.success("Solicitud enviada", {
+        description: `Se ha enviado una invitación a ${selectedFriend.name}.`,
+        icon: "📩"
+      });
+    } else {
+      toast.error("Amigo eliminado", {
+        description: `${selectedFriend.name} ya no está en tu lista de amigos.`,
+        icon: "🗑️"
+      });
+    }
     console.log(modalMode === "delete" ? "Eliminando a:" : "Invitando a:", selectedFriend.name);
     setShowModal(false);
   };

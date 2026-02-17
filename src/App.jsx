@@ -1,5 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Toaster } from 'sonner';
 import Start from "./pages/Start";
 import LoadingPage from "./pages/LoadingPage";
 import Home from "./pages/Home";
@@ -10,6 +11,12 @@ import Friends from "./pages/Friends";
 
 const App = () => (
   <Router>
+    <Toaster 
+      position="top-right" 
+      richColors 
+      closeButton
+    />
+
     <Routes>
       <Route path="/" element={<Start />} />
       <Route path="/loading" element={<LoadingPage />} />
