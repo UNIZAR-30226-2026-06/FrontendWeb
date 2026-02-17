@@ -5,7 +5,6 @@ const GameModeCard = ({ mode, onPublic, onPrivate }) => {
   return (
     <div className="game-card-container">
       <div className="card-inner">
-        {/* PARTE FRONTAL: El diseño con círculos animados */}
         <div className="card-front">
           <div className="bg-circles">
             <div className="circle"></div>
@@ -24,7 +23,6 @@ const GameModeCard = ({ mode, onPublic, onPrivate }) => {
           </div>
         </div>
 
-        {/* PARTE TRASERA: Los botones de acción */}
         <div className="card-back">
           <div className="back-content">
              <h3>{mode.title}</h3>

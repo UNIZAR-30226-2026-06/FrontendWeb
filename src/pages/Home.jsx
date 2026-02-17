@@ -34,7 +34,6 @@ export default function Home() {
   return (
     <div className="home-screen">
       <div className="main-card">
-        {/* Header: Logo, Monedas y Perfil */}
         <header className="top-bar">
           <div className="logo">
             <img src={logoImg} alt="Logo Uno Not" className="logo-img" />
@@ -50,7 +49,6 @@ export default function Home() {
           <h1>¡Bienvenido!</h1>
           <p className="subtitle">Elige un modo de juego para empezar</p>
 
-          {/* Carrusel */}
           <div className="carousel-wrapper">
             <button className="button-3d" onClick={() => scroll(-1)}>
               <div className="button-top">
@@ -80,7 +78,6 @@ export default function Home() {
             </button>
           </div>
 
-          {/* Menú Inferior */}
           <HomeNavigation />
         </div>
       </div>

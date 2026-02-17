@@ -91,7 +91,6 @@
   color: white;
 }
 
-/* --- BOTONES DE LA CARA TRASERA --- */
 .back-buttons {
   display: flex;
   flex-direction: column; 
