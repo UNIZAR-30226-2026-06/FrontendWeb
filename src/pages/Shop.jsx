@@ -73,7 +73,7 @@ const Shop = () => {
 
       {showModal && (
         <ConfirmModal 
-          type="success" // Usamos el tipo success para compras
+          type="success" 
           message={`¿Seguro que desea comprar la skin "${selectedItem.name}" por ${selectedItem.price} monedas?`}
           onConfirm={confirmPurchase}
           onCancel={() => setShowModal(false)}

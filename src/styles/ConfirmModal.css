@@ -23,7 +23,6 @@
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
-/* Cambiamos el color del borde según el tipo */
 .modal-content.modal-success { border-color: #2ecc71; }
 .modal-content.modal-danger { border-color: #e74c3c; }
 
