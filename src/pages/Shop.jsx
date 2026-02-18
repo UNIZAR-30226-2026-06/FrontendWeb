@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 import ShopFilter from "../components/ShopFilter";
 import ShopItem from "../components/ShopItem";
 import ConfirmModal from "../components/ConfirmModal"; 
@@ -26,7 +27,9 @@ const Shop = () => {
   };
 
   const confirmPurchase = () => {
-    console.log(`Compra confirmada: ${selectedItem.name}`);
+    toast.success("¡Compra realizada!", {
+      description: `Has adquirido ${selectedItem.name} correctamente.`,
+    });
     setShowModal(false);
   };
 
@@ -52,10 +55,12 @@ const Shop = () => {
           </div>
         </header>
 
-      <ShopFilter activeFilter={filter} setFilter={setFilter} />
+        <ShopFilter activeFilter={filter} setFilter={setFilter} />
+        
         <div className="shop-search-wrapper">
           <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
         </div>
+
         <section className="shop-grid">
           {filteredItems.length > 0 ? (
             filteredItems.map((item) => (

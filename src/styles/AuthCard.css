@@ -39,7 +39,7 @@
   text-align: center;
 }
 
-.card-side::before { content: 'Log in'; left: 50%; transform: translateX(-140px); text-decoration: underline; }
+.card-side::before { content: 'Log in'; left: 50%; transform: translateX(-140px); text-decoration: none; }
 .card-side::after { content: 'Sign up'; left: 50%; transform: translateX(60px); text-decoration: none; }
 
 .slider {
@@ -129,6 +129,7 @@
   padding: 0 15px;
   font-weight: 600;
   outline: none;
+  color: #757575;
 }
 
 .flip-card__btn {
@@ -141,6 +142,7 @@
   font-weight: 900;
   cursor: pointer;
   margin-top: 10px;
+  color: #323232;
 }
 
 .forgot-password {
