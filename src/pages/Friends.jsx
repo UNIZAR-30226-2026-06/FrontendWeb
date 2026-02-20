@@ -68,7 +68,7 @@ const Friends = () => {
             <h1>Amigos</h1>
           </div>
           <div className="friends-header-actions">
-            <button className="btn-back-friends" onClick={() => navigate("/")}>
+            <button className="btn-back-friends" onClick={() => navigate(-1)}>
               <span className="back-icon">↩</span> Volver
             </button>
           </div>
