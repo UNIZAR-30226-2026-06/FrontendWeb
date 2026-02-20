@@ -33,7 +33,7 @@ const Profile = () => {
               <div className="stat-pill coins-pill">💰 500 Monedas</div>
             </div>
           </div>
-          <button className="btn-back" onClick={() => navigate("/")}>
+          <button className="btn-back" onClick={() => navigate(-1)}>
             <span className="back-icon">↩</span> Volver
           </button>
         </header>

@@ -49,7 +49,7 @@ const Shop = () => {
           </div>
           <div className="shop-header-actions">
             <div className="stat-pill coins-pill">💰 500 Monedas</div>
-            <button className="btn-back-shop" onClick={() => navigate("/")}>
+            <button className="btn-back-shop" onClick={() => navigate(-1)}>
               <span className="back-icon">↩</span> Volver
             </button>
           </div>
