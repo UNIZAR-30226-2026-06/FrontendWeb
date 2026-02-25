@@ -1,20 +1,35 @@
-import { useRef } from "react";
+import { useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import logoImg from "../img/logo.png";
+import logoImg from "/img/logo.png";
 import GameModeCard from "../components/GameModeCard";
 import HomeNavigation from "../components/HomeNavigation";
+import { playSound } from "../utils/sounds";
 import "../styles/Home.css";
 
 const MODES = [
   { title: "Modo con roles", desc: "Roles únicos y habilidades especiales.", color: "#2A2D6E", icon: "🎭" },
   { title: "Modo cartas", desc: "Nuevas cartas que modifican las reglas del juego.", color: "#2A2D6E", icon: "⚡" },
   { title: "Modo personalizado", desc: "Haz el juego a tu medida, cartas y roles fusionados.", color: "#2A2D6E", icon: "🛠️" },
-  { title: "Partidas Pausadas", desc: "Reanuda tus partidas privadas.", color: "#2A2D6E", icon: "🛠️" }
+  { title: "Partidas Pausadas", desc: "Reanuda tus partidas privadas.", color: "#2A2D6E", icon: "⏸️" }
 ];
 
 export default function Home() {
   const navigate = useNavigate();
   const scrollRef = useRef(null);
+
+  const [username, setUsername] = useState("Jugador1");
+  const [userAvatar, setUserAvatar] = useState("👤");
+
+  useEffect(() => {
+    const savedName = localStorage.getItem("username");
+    const savedAvatar = localStorage.getItem("userAvatar");
+    if (savedName) {
+      setUsername(savedName);
+    }
+    if (savedAvatar) {
+      setUserAvatar(savedAvatar); 
+    }
+  }, []);
 
   const scroll = (direction) => {
     if (scrollRef.current) {
@@ -31,6 +46,28 @@ export default function Home() {
     }
   };
 
+  const handleNavigate = (title, isPrivate) => {
+    playSound('click');
+    const modeKey = title === "Modo con roles" ? "roles" : "cards";
+    const route = modeKey === "roles" ? "/modeRols" : "/modeCards";
+
+    if (title === "Modo personalizado") {
+      navigate("/partidaPersonalizada");
+      return;
+    }
+
+    if (title === "Partidas Pausadas") {
+      navigate("/loading");
+      return;
+    }
+
+    if (isPrivate) {
+      navigate("/private-action", { state: { mode: modeKey } });
+    } else {
+      navigate(route, {state: {mode: modeKey, isPublic: true, isMultiplayer: true}});
+    }
+  };
+
   return (
     <div className="home-screen">
       <div className="main-card">
@@ -41,16 +78,16 @@ export default function Home() {
           <div className="user-stats">
             <div className="stat coins">💰 500</div>
             <button className="stat user clickable-user" onClick={() => navigate("/profile")} aria-label="Ver perfil de usuario">
-              👤 Jugador1
+              {userAvatar} {username}
             </button>
           </div>
         </header>
         <div className="home-content">
-          <h1>¡Bienvenido!</h1>
+          <h1>¡Bienvenido, {username}!</h1>
           <p className="subtitle">Elige un modo de juego para empezar</p>
 
           <div className="carousel-wrapper">
-            <button className="button-3d" onClick={() => scroll(-1)}>
+            <button className="button-3d" onClick={() => {playSound('slide'); scroll(-1)}}>
               <div className="button-top">
                 <span className="nav-icon-3d">❮</span>
               </div>
@@ -63,13 +100,13 @@ export default function Home() {
                 <GameModeCard 
                   key={i} 
                   mode={m} 
-                  onPublic={() => navigate("/game")} 
-                  onPrivate={() => navigate("/game")}
+                  onPublic={() => handleNavigate(m.title, false)} 
+                  onPrivate={() => handleNavigate(m.title, true)}
                 />
               ))}
             </div>
 
-            <button className="button-3d" onClick={() => scroll(1)}>
+            <button className="button-3d" onClick={() => {playSound('slide'); scroll(1)}}>
               <div className="button-top">
                 <span className="nav-icon-3d">❯</span>
               </div>

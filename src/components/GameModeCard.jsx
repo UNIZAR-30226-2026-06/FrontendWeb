@@ -2,6 +2,7 @@ import React from "react";
 import "../styles/GameModeCard.css";
 
 const GameModeCard = ({ mode, onPublic, onPrivate }) => {
+  const isSingleActionButton = mode.title === "Modo personalizado" || mode.title === "Partidas Pausadas";
   return (
     <div className="game-card-container">
       <div className="card-inner">
@@ -28,8 +29,16 @@ const GameModeCard = ({ mode, onPublic, onPrivate }) => {
              <h3>{mode.title}</h3>
              <p>{mode.desc}</p>
              <div className="back-buttons">
-                <button className="btn-public" onClick={onPublic}>Partida Pública</button>
-                <button className="btn-private" onClick={onPrivate}>Partida Privada</button>
+                {isSingleActionButton ? (
+                  <button className="btn-single" onClick={onPublic}>
+                    {mode.title === "Modo personalizado" ? "Crear Partida" : "Reanudar"}
+                  </button>
+                ) : (
+                  <>
+                    <button className="btn-public" onClick={onPublic}>Partida Pública</button>
+                    <button className="btn-private" onClick={onPrivate}>Partida Privada</button>
+                  </>
+                )}
              </div>
           </div>
         </div>
