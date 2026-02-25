@@ -28,7 +28,6 @@
   background-color: #1a1c4d; 
 }
 
-/* --- FRONTAL --- */
 .bg-circles {
   position: absolute;
   width: 100%;
@@ -75,7 +74,6 @@
   border-radius: 15px;
 }
 
-/* --- TRASERA --- */
 .card-back {
   transform: rotateY(180deg);
   display: flex;
@@ -129,6 +127,25 @@
 .btn-private:hover { 
   background: #251dcb; 
   transform: translateY(-2px); 
+}
+
+.btn-single {
+  width: 90%;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  background-color: #62b155; 
+  color: white;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.2s;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.btn-single:hover {
+  transform: translateY(-2px);
+  background-color: #55a04a;
 }
 
 .back-buttons button:active {

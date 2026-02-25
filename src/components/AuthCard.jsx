@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { playSound } from "../utils/sounds";
 import "../styles/AuthCard.css";
 
 const AuthCard = () => {
@@ -15,6 +16,8 @@ const AuthCard = () => {
   
   const handleAuth = (e) => {
     e.preventDefault();
+    localStorage.setItem("username", loginUser);
+    playSound('success');
     toast.success(`¡Bienvenido de nuevo, ${loginUser}!`, {
       description: "Preparando tu sesión de juego...",
       icon: "🎮"
@@ -25,11 +28,14 @@ const AuthCard = () => {
   const handleSignUp = (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
+      playSound('error');
       toast.error("¡Las contraseñas no coinciden!", {
         description: "Asegúrate de que ambos campos sean iguales.",
       });
       return;
     }
+    localStorage.setItem("username", signupUser);
+    playSound('success');
     toast.success(`¡Cuenta creada, ${signupUser}!`, {
       description: "Tu aventura comienza ahora. Redirigiendo...",
       icon: "🚀"
@@ -39,6 +45,7 @@ const AuthCard = () => {
 
   const handleRecoverPassword = (e) => {
     e.preventDefault();
+    playSound('success');
     toast.success("Correo enviado", {
       description: `Hemos enviado instrucciones a ${email}`,
       icon: "📧"

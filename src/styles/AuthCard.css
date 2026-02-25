@@ -205,6 +205,25 @@
   color: white;
 }
 
+.title {
+  font-size: 28px;
+  font-weight: 900;
+  color: #ffffff;
+  text-align: center;
+  text-shadow: 3px 3px 0px #323232;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.flip-card__front .title, 
+.flip-card__back .title {
+  margin-top: 0;
+  padding-bottom: 5px;
+  border-bottom: 3px solid #323232;
+  width: fit-content;
+}
+
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
