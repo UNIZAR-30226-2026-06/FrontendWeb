@@ -1,0 +1,13 @@
+.game-full-layout {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #0a0a20;
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+

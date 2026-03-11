@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Toaster } from 'sonner';
+
 import Landing from "./pages/Landing";
 import Start from "./pages/Start";
 import LoadingPage from "./pages/LoadingPage";
@@ -16,6 +17,7 @@ import ModeRols from "./pages/ModeRols";
 import JoinPartySelector from "./pages/JoinPartySelector";
 import PartidaPersonalizada from "./pages/PartidaPersonalizada";
 import Lobby from "./pages/Lobby";
+
 import GameBoard from "./components/GameBoard";
 
 const App = () => { 
@@ -52,10 +54,13 @@ const App = () => {
         <Route path="/start" element={<Start />} />
         <Route path="/loading" element={<LoadingPage />} />
         <Route path="/home" element={<Home />} />
-        <Route path="/game" element={<Game />} />
+
+        <Route path="/game" element={<Game />} /> 
+        
         <Route path="/profile" element={<Profile />} />
         <Route path="/shop" element={<Shop />} />
         <Route path="/friends" element={<Friends />} />
+
         <Route path="/private-action" element={<PrivateAction />} />
         <Route path="/container" element={<ConnectionSelector />} />
         <Route path="/modeCards" element={<ModeCards />} />
@@ -63,6 +68,7 @@ const App = () => {
         <Route path="/code" element={<JoinPartySelector />} />
         <Route path="/partidaPersonalizada" element={<PartidaPersonalizada />} />
         <Route path="/lobby" element={<Lobby />} />
+
         <Route path="/gameBoard" element={<GameBoard />} />
       </Routes>
     </Router>
