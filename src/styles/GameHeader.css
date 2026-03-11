@@ -1,0 +1,50 @@
+.game-header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 40px;
+  background: rgba(10, 10, 30, 0.7);
+  height: 80px;
+  border-bottom: 1px solid rgba(0, 229, 255, 0.2);
+}
+
+.header-logo {
+  height: 50px;
+  width: auto;
+}
+
+.digital-clock {
+  font-family: 'Courier New', monospace;
+  font-size: 2.5rem;
+  color: white;
+  margin-right: 20px;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.pause-pill {
+  background: #ff4757;
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.burger-menu-btn {
+  background: transparent;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.burger-menu-btn span {
+  width: 35px;
+  height: 4px;
+  background: #00e5ff;
+  border-radius: 2px;
+  box-shadow: 0 0 5px #00e5ff;
+}

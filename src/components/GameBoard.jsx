@@ -1,57 +1,63 @@
 import React from "react";
-import Card from "../components/Card"; 
-import "../styles/GameBoard.css"; 
+import "../styles/GameBoard.css";
 
-export default function GameBoard() {
-  const colors = ["blue", "red", "green", "yellow"];
-  const numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
-  
-  const specialActionCards = ["+2", "reverse", "+2R", "skip", "extraTurn", "playOdd", "playEven"]; 
-
-  const fullDeck = colors.flatMap((color) => {
-    const numeric = numbers.map((num) => ({
-      id: `${color}-${num}`,
-      value: num,
-      color: color,
-      type: "normal"
-    }));
-
-    const actionCards = specialActionCards.map((type) => ({
-      id: `${color}-${type}`,
-      value: type,
-      color: color,
-      type: "normal"
-    }));
-
-    return [...numeric, ...actionCards];
-  });
+const GameBoard = ({ myCards, currentTableCard }) => {
+  const RenderOpponent = ({ name, cards, pos, emoji = "🤖" }) => (
+    <div className={`opponent-container ${pos}`}>
+      <div className="avatar-capsule">
+        <div className="avatar-glow">{emoji}</div>
+        <div className="avatar-tag">
+          <span className="bot-name">{name}</span>
+          <span className="card-count-badge">{cards}</span>
+        </div>
+      </div>
+      <div className="bot-cards-fan">
+        {[...Array(cards)].map((_, i) => (
+          <div key={i} className="card-back-cosmic">
+            <span className="moon-symbol">🌙</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 
   return (
-    <div className="game-board-container">
-      <header className="game-header">
-        <button className="btn-back" onClick={() => window.history.back()}>
-          ← Salir
-        </button>
-        <h1>Mesa de Juego</h1>
-      </header>
-      
-      <div className="board-main-area">
-        <div className="deck-display-grid">
-          {fullDeck.map((card) => (
-            <div key={card.id} className="card-preview-wrapper">
-              <Card 
-                value={card.value} 
-                color={card.color} 
-                type={card.type} 
-              />
+    <div className="game-board-layout">
+      <RenderOpponent name="Bot 14" cards={4} pos="left" />
+      <RenderOpponent name="Bot 24" cards={4} pos="top" />
+      <RenderOpponent name="Bot 33" cards={4} pos="right" />
+
+      <div className="board-center">
+        <div className="draw-pile">
+          <span className="moon-symbol">🌙</span>
+        </div>
+        
+        {currentTableCard && (
+          <div className={`active-card card-${currentTableCard.color}`}>
+            <div className="card-inner">
+              <span className="card-value">{currentTableCard.value}</span>
+            </div>
+          </div>
+        )}
+      </div>
+
+      <div className="player-interaction-area">
+        <div className="my-hand-container">
+          {myCards.map((card, index) => (
+            <div key={index} className="card-wrapper">
+              <div className={`game-card card-${card.color}`}>
+                <div className="card-inner">
+                  <span className="card-value">{card.value}</span>
+                </div>
+              </div>
             </div>
           ))}
         </div>
+        
+        <button className="uno-shout-btn">UNO</button>
       </div>
-
-      <footer className="player-hand-container">
-        <p>Mostrando {fullDeck.length} cartas (Numéricas + Especiales por color)</p>
-      </footer>
     </div>
   );
-}
+};
+
+export default GameBoard;
