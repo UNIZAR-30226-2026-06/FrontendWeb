@@ -15,7 +15,7 @@ const LoadingPage = () => {
 
     const timer = setTimeout(() => {
       if (isStartingGame) {
-        navigate("/gameBoard", { state: location.state });
+        navigate("/game", { state: location.state });
       } else {
         navigate("/home");
       }
