@@ -7,16 +7,30 @@
 }
 
 .opponent-container {
-  position: absolute;
-  z-index: 10;
   display: flex;
-  flex-direction: column;
+  flex-direction: column; 
   align-items: center;
+  gap: 10px; 
+  position: absolute;
 }
 
-.left { left: 5%; top: 35%; }
-.top  { left: 50%; top: 5%; transform: translateX(-50%); }
-.right { right: 5%; top: 35%; }
+.opponent-container.left {
+  left: 2%;
+  top: 35%;
+  flex-direction: row; 
+}
+.opponent-container.right {
+  right: 2%;
+  top: 35%;
+  flex-direction: row-reverse; 
+}
+
+.opponent-container.top {
+  left: 50%;
+  top: 2%;
+  transform: translateX(-50%);
+  flex-direction: column;
+}
 
 .avatar-capsule {
   display: flex;
@@ -33,29 +47,35 @@
 .bot-cards-fan {
   display: flex;
   justify-content: center;
+  align-items: flex-start;
+  padding-top: 10px; 
+  width: auto;
 }
 
 .left .bot-cards-fan, .right .bot-cards-fan {
   flex-direction: column;
 }
 
-.card-back-cosmic {
-  width: 40px;
-  height: 60px;
-  background: linear-gradient(135deg, #0f174a 0%, #000010 100%);
-  border: 1.5px solid #00e5ff;
-  border-radius: 4px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-shadow: 0 0 10px rgba(0, 229, 255, 0.4);
+.bot-card-item {
+  width: 45px;
+  height: 70px;
+  border-radius: 5px;
+  background-size: cover;
+  position: relative; 
+  flex-shrink: 0;
+  border: 2px solid #FDF5E6;
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+  transform-origin: bottom center; 
 }
 
-.top .card-back-cosmic { margin-left: -20px; }
-.top .card-back-cosmic:first-child { margin-left: 0; }
+.left { left: 5%; top: 30%; }
+.right { right: 5%; top: 30%; }
+.top { left: 50%; top: 5%; transform: translateX(-50%); }
 
-.left .card-back-cosmic, .right .card-back-cosmic { margin-top: -35px; }
-.left .card-back-cosmic:first-child, .right .card-back-cosmic:first-child { margin-top: 0; }
+.back-inner {
+  font-size: 0.8rem;
+  font-weight: bold;
+}
 
 .board-center {
   position: absolute;
@@ -77,7 +97,6 @@
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  /* Efecto de pila real */
   box-shadow: 
     3px 3px 0px #00e5ff, 
     6px 6px 0px #0a0a2e,
@@ -122,17 +141,5 @@
   padding-left: 40px;
 }
 
-.card-wrapper {
-  margin-left: -40px;
-  transition: transform 0.3s;
-}
 
-.card-wrapper:hover {
-  transform: translateY(-35px) scale(1.1);
-  z-index: 100;
-}
 
-.moon-symbol {
-  color: #00e5ff;
-  filter: drop-shadow(0 0 5px #00e5ff);
-}
