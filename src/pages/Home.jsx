@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import logoImg from "/img/logo.png";
 import GameModeCard from "../components/GameModeCard";
 import HomeNavigation from "../components/HomeNavigation";
+import { getMyProfile } from "../services/userService";
 import { playSound } from "../utils/sounds";
 import "../styles/Home.css";
 
@@ -19,16 +20,29 @@ export default function Home() {
 
   const [username, setUsername] = useState("Jugador1");
   const [userAvatar, setUserAvatar] = useState("👤");
+  const [coins, setCoins] = useState(0);
 
   useEffect(() => {
-    const savedName = localStorage.getItem("username");
-    const savedAvatar = localStorage.getItem("userAvatar");
-    if (savedName) {
-      setUsername(savedName);
-    }
-    if (savedAvatar) {
-      setUserAvatar(savedAvatar); 
-    }
+    const loadData = async () => {
+      try {
+        const profile = await getMyProfile();
+        
+        setUsername(profile.nombre_usuario || "Jugador1");
+        setCoins(profile.monedas || 0);
+        
+        const savedAvatar = localStorage.getItem("userAvatar");
+        if (savedAvatar) {
+          setUserAvatar(savedAvatar);
+        } else {
+          setUserAvatar("👤");
+        }
+      } catch (error) {
+        const savedName = localStorage.getItem("username");
+        if (savedName) setUsername(savedName);
+      }
+    };
+
+    loadData();
   }, []);
 
   const scroll = (direction) => {
@@ -37,7 +51,6 @@ export default function Home() {
       if (card) {
         const cardWidth = card.offsetWidth; 
         const gap = 20;
-        
         scrollRef.current.scrollBy({
           left: (cardWidth + gap) * direction,
           behavior: "smooth",
@@ -68,6 +81,13 @@ export default function Home() {
     }
   };
 
+  const renderAvatar = () => {
+    if (userAvatar?.includes('.') || userAvatar?.includes('/')) {
+      return <img src={userAvatar} alt="Avatar" className="user-avatar-mini" />;
+    }
+    return <span className="user-emoji-mini">{userAvatar || "👤"}</span>;
+  };
+
   return (
     <div className="home-screen">
       <div className="main-card">
@@ -76,9 +96,9 @@ export default function Home() {
             <img src={logoImg} alt="Logo Uno Not" className="logo-img" />
           </div>
           <div className="user-stats">
-            <div className="stat coins">💰 500</div>
-            <button className="stat user clickable-user" onClick={() => navigate("/profile")} aria-label="Ver perfil de usuario">
-              {userAvatar} {username}
+            <div className="stat coins">💰 {coins}</div>
+            <button className="stat user clickable-user" onClick={() => navigate("/profile")}>
+              {renderAvatar()} {username}
             </button>
           </div>
         </header>

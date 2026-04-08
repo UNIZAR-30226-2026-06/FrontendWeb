@@ -5,24 +5,17 @@ import FriendsFilter from "../components/FriendsFilter";
 import FriendItem from "../components/FriendsItem"; 
 import ConfirmModal from "../components/ConfirmModal";
 import SearchBar from "../components/SearchBox"; 
+import { useSocket } from "../context/SocketContext";
 import "../styles/Friends.css";
 
-import { 
-  getMyFriends, 
-  searchUsers, 
-  deleteFriend, 
-  sendFriendRequest, 
-  getPendingRequests,
-  acceptFriendRequest,
-  rejectFriendRequest 
-} from "../services/userService";
+import { getMyFriends, searchUsers, deleteFriend, sendFriendRequest, acceptFriendRequest, rejectFriendRequest, getConnectedFriends } from "../services/userService";
 import { getCheckMe } from "../services/authService";
 
 const Friends = () => {
   const navigate = useNavigate();
+  const { pendingRequests, setPendingRequests, sendNewFriendRequest, sendFriendRequestAccepted, sendFriendRequestRejected } = useSocket();
   
   const [friendsList, setFriendsList] = useState([]);
-  const [pendingRequests, setPendingRequests] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("Mis Amigos");
@@ -33,33 +26,29 @@ const Friends = () => {
   const [searchResults, setSearchResults] = useState([]); 
   const [isSearching, setIsSearching] = useState(false);
 
-  const suggestedUsers = [
-    { id: "sug-3", name: "Jugador 3", coins: 300, icon: "😎", status: "" },
-    { id: "sug-4", name: "Jugador 4", coins: 150, icon: "🎯", status: "" },
-  ];
-
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const [friendsData, meData, pendingData] = await Promise.all([
-          getMyFriends(),
-          getCheckMe(),
-          getPendingRequests()
-        ]);
+        const [friendsData, meData, connectedData] = await Promise.all([ getMyFriends(), getCheckMe(), getConnectedFriends() ]);
+
         setCurrentUser(meData);
-        const mappedReqs = pendingData.map(req => {
-          const identifier = typeof req === 'object' ? req.id_usuario_origen : req;
-          const displayName = (typeof req === 'object' && req.nombre_usuario) ? req.nombre_usuario : identifier;
-          return { id: identifier, name: displayName, coins: 0, icon: "👤" };
-        });
-        setPendingRequests(mappedReqs);
+
+        const connectedIds = Array.isArray(connectedData) 
+          ? connectedData.map(c => typeof c === 'object' ? c.id : c)
+          : [];
+
         const mappedFriends = friendsData.map(f => {
           const isObj = typeof f === 'object' && f !== null;
           const name = isObj ? (f.nombre_usuario || f.name) : f;
           const id = isObj ? (f.id || name) : name;
-          return { id: id, name: name, coins: 0, icon: "👤", status: "Offline" };
+          const isOnline = connectedIds.includes(id);
+          const coins = isObj ? (f.monedas ?? f.coins ?? 0) : 0;
+          const avatarIcon = isObj ? (f.image || "👤") : "👤";
+
+          return { id, name, coins, icon: avatarIcon, status: isOnline ? "Online" : "Offline" };
         });
+        
         setFriendsList(mappedFriends);
       } catch (error) {
         if (!error.message?.includes("401")) toast.error("Error al cargar datos");
@@ -71,20 +60,21 @@ const Friends = () => {
   }, []);
 
   useEffect(() => {
-    if (activeTab !== "Buscar Amigos" || searchQuery.trim() === "") {
+    const trimmedQuery = searchQuery.trim();
+    if (activeTab !== "Buscar Amigos" || trimmedQuery === "") {
       setSearchResults([]);
       return;
     }
     const delayDebounceFn = setTimeout(async () => {
       try {
         setIsSearching(true);
-        const data = await searchUsers(searchQuery);
+        const data = await searchUsers(trimmedQuery);
         const mapped = data
           .map(res => ({
             id: res.id || res,
             name: res.nombre_usuario || res,
             coins: res.monedas || 0,
-            icon: "👤",
+            icon: res.image || "👤",
             status: ""
           }))
           .filter(user => 
@@ -100,8 +90,6 @@ const Friends = () => {
     }, 400);
     return () => clearTimeout(delayDebounceFn);
   }, [searchQuery, activeTab, currentUser, friendsList]);
-
-  const usersToDisplay = searchQuery.trim() === "" ? suggestedUsers : searchResults;
 
   const handleDeleteOpen = (friend) => {
     setModalMode("delete");
@@ -121,6 +109,7 @@ const Friends = () => {
       setPendingRequests(prev => prev.filter(r => r.id !== user.id));
       const newFriend = { ...user, status: "Offline" };
       setFriendsList(prev => [...prev, newFriend]);
+      sendFriendRequestAccepted(user.id);
       toast.success(`¡Ahora eres amigo de ${user.name}!`);
     } catch (error) {
       toast.error("No se pudo aceptar la solicitud");
@@ -131,6 +120,7 @@ const Friends = () => {
     try {
       await rejectFriendRequest(user.id);
       setPendingRequests(prev => prev.filter(r => r.id !== user.id));
+      sendFriendRequestRejected(user.id);
       toast.error("Solicitud rechazada");
     } catch (error) {
       toast.error("Error al rechazar la solicitud");
@@ -141,9 +131,9 @@ const Friends = () => {
     if (modalMode === "add") {
       try {
         await sendFriendRequest(selectedFriend.id);
-        
-        setSearchResults(prev => prev.filter(u => u.id !== selectedFriend.id));
+        sendNewFriendRequest(selectedFriend.id);
 
+        setSearchResults(prev => prev.filter(u => u.id !== selectedFriend.id));
         toast.success("Solicitud enviada", { 
           description: `Invitación enviada a ${selectedFriend.name}.`, 
           icon: "📩" 
@@ -155,7 +145,6 @@ const Friends = () => {
       try {
         await deleteFriend(selectedFriend.id);
         setFriendsList(prev => prev.filter(f => f.id !== selectedFriend.id));
-        
         toast.error("Amigo eliminado", { 
           description: `${selectedFriend.name} eliminado.`, 
           icon: "🗑️" 
@@ -211,8 +200,8 @@ const Friends = () => {
                   <p className="placeholder-text">Buscando usuarios...</p>
                 ) : (
                   <>
-                    {searchQuery.trim() === "" && <p className="search-hint">Sugerencias para ti:</p>}
-                    {usersToDisplay.map(user => (
+                    {searchQuery.trim() === "" && <p className="search-hint">Escribe para buscar nuevos amigos...</p>}
+                    {searchResults.map(user => (
                       <FriendItem key={user.id} friend={user} isSearchMode={true} onAdd={handleAddOpen} />
                     ))}
                   </>
