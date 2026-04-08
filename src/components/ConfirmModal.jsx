@@ -1,8 +1,8 @@
 import React from "react";
 import "../styles/ConfirmModal.css";
 
-const ConfirmModal = ({ message, onConfirm, onCancel, type = "danger" }) => {
-  const confirmText = type === "success" ? "Enviar Solicitud" : "Eliminar";
+const ConfirmModal = ({ message, onConfirm, onCancel, type = "danger", confirmLabel }) => {
+  const defaultConfirmText = type === "success" ? "Enviar Solicitud" : "Eliminar";
   
   return (
     <div className="modal-overlay">
@@ -16,7 +16,7 @@ const ConfirmModal = ({ message, onConfirm, onCancel, type = "danger" }) => {
             Cancelar
           </button>
           <button className={`btn-modal confirm ${type}`} onClick={onConfirm}>
-            {confirmText}
+            {confirmLabel || defaultConfirmText}
           </button>
         </div>
       </div>
