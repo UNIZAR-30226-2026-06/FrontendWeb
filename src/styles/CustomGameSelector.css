@@ -60,11 +60,30 @@
   align-items: center;
   border: 3px solid transparent;
   margin-bottom: 8px;
+  position: relative;
 }
 
 .option-item.active .option-icon-box {
   background: #e0e6f5;
   border-color: #ffffff;
+}
+
+.option-check {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #62b155;
+  color: #fff;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 13px;
+  font-weight: bold;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .option-item.active .option-label { color: white; font-weight: bold; }
@@ -87,12 +106,43 @@
   padding: 0 5px;
 }
 
+.num-cards-selector button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
 .num-display {
   font-size: 22px;
   font-weight: bold;
 }
 
+.custom-hint {
+  text-align: center;
+  font-size: 12px;
+  color: #c9d4ef;
+  opacity: 0.85;
+  margin: 6px 0 18px;
+}
+
+.custom-actions-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
 .custom-create-btn {
   max-width: 280px;
   margin: 0 auto !important;
+}
+
+.custom-join-btn {
+  max-width: 280px;
+  margin: 0 auto !important;
+  background: linear-gradient(180deg, #2a3672 0%, #1c245a 100%) !important;
+  border: 2px solid #5a72b5 !important;
+}
+
+.custom-join-btn:hover {
+  filter: brightness(1.15);
 }
