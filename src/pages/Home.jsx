@@ -5,6 +5,7 @@ import GameModeCard from "../components/GameModeCard";
 import HomeNavigation from "../components/HomeNavigation";
 import { getMyProfile } from "../services/userService";
 import { playSound } from "../utils/sounds";
+import AnimatedCoins from "../components/AnimatedCoins";
 import "../styles/Home.css";
 
 const MODES = [
@@ -70,7 +71,7 @@ export default function Home() {
     }
 
     if (title === "Partidas Pausadas") {
-      navigate("/loading");
+      navigate("/partidasPausadas");
       return;
     }
 
@@ -96,7 +97,7 @@ export default function Home() {
             <img src={logoImg} alt="Logo Uno Not" className="logo-img" />
           </div>
           <div className="user-stats">
-            <div className="stat coins">💰 {coins}</div>
+            <AnimatedCoins coins={coins} className="stat coins" />
             <button className="stat user clickable-user" onClick={() => navigate("/profile")}>
               {renderAvatar()} {username}
             </button>
