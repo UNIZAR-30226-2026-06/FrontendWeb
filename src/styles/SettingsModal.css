@@ -96,3 +96,56 @@ input:checked + .button-content .button-indicator {
   border-color: #60d480;
   transform: translateX(-58px);
 }
+.game-info-block {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  background: linear-gradient(135deg, rgba(0, 229, 255, 0.06), rgba(96, 212, 128, 0.06));
+  border: 1px solid rgba(0, 229, 255, 0.2);
+  border-radius: 14px;
+  padding: 16px 18px;
+  margin-bottom: 22px;
+}
+
+.game-info-icon {
+  font-size: 2.2rem;
+  line-height: 1;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.game-info-text {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.game-info-title {
+  color: #00e5ff;
+  font-weight: 800;
+  font-size: 1rem;
+  letter-spacing: 0.5px;
+}
+
+.game-info-desc {
+  color: #aac4cc;
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+.game-info-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.game-info-tag {
+  background: rgba(96, 212, 128, 0.14);
+  border: 1px solid rgba(96, 212, 128, 0.35);
+  color: #60d480;
+  font-size: 0.78rem;
+  font-weight: bold;
+  padding: 3px 10px;
+  border-radius: 20px;
+}

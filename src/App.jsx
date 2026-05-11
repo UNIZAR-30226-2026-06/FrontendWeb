@@ -16,14 +16,17 @@ import ModeCards from "./pages/ModeCards";
 import ModeRols from "./pages/ModeRols";
 import JoinPartySelector from "./pages/JoinPartySelector";
 import PartidaPersonalizada from "./pages/PartidaPersonalizada";
+import CustomJoin from "./pages/CustomJoin";
+import PartidasPausadas from "./pages/PartidasPausadas";
 import Lobby from "./pages/Lobby";
 
+import CardGallery from "./pages/CardGallery";
 import GameBoard from "./components/GameBoard";
 
 const App = () => { 
   const audioRef = useRef(new Audio("/sounds/base.mp3"));
 
-  useEffect(() => {
+  /*useEffect(() => {
     const music = audioRef.current;
     music.loop = true; 
     music.volume = 0.03; 
@@ -39,7 +42,7 @@ const App = () => {
     return () => {
       window.removeEventListener("click", startMusic);
     };
-  }, []);
+  }, []);*/
 
   return (
     <Router>
@@ -56,6 +59,8 @@ const App = () => {
         <Route path="/home" element={<Home />} />
 
         <Route path="/game" element={<Game />} /> 
+        <Route path="/partidasPausadas" element={<PartidasPausadas />} />
+        <Route path="/galeria" element={<CardGallery />} />
         
         <Route path="/profile" element={<Profile />} />
         <Route path="/shop" element={<Shop />} />
@@ -67,6 +72,7 @@ const App = () => {
         <Route path="/modeRols" element={<ModeRols />} />
         <Route path="/code" element={<JoinPartySelector />} />
         <Route path="/partidaPersonalizada" element={<PartidaPersonalizada />} />
+        <Route path="/customJoin" element={<CustomJoin />} />
         <Route path="/lobby" element={<Lobby />} />
 
         <Route path="/gameBoard" element={<GameBoard />} />
