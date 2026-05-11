@@ -15,3 +15,7 @@ export const getCheckMe = () => {
 export const logoutUser = () => {
   return apiRequest("/auth/logout", "POST");
 };
+
+export const changePassword = (contrasena_actual, nueva_contrasena) => {
+  return apiRequest("/usuarios/me/password", "PUT", { contrasena_actual, nueva_contrasena });
+};
