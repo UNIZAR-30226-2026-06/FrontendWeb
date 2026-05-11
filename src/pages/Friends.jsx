@@ -7,13 +7,19 @@ import ConfirmModal from "../components/ConfirmModal";
 import SearchBar from "../components/SearchBox"; 
 import { useSocket } from "../context/SocketContext";
 import "../styles/Friends.css";
-
-import { getMyFriends, searchUsers, deleteFriend, sendFriendRequest, acceptFriendRequest, rejectFriendRequest, getConnectedFriends } from "../services/userService";
+import { getMyFriends, searchUsers, deleteFriend, sendFriendRequest, acceptFriendRequest, rejectFriendRequest } from "../services/userService";
 import { getCheckMe } from "../services/authService";
 
 const Friends = () => {
   const navigate = useNavigate();
-  const { pendingRequests, setPendingRequests, sendNewFriendRequest, sendFriendRequestAccepted, sendFriendRequestRejected } = useSocket();
+  const { 
+    pendingRequests, 
+    setPendingRequests, 
+    sendNewFriendRequest, 
+    sendFriendRequestAccepted, 
+    sendFriendRequestRejected,
+    onlineFriends 
+  } = useSocket();
   
   const [friendsList, setFriendsList] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
@@ -30,23 +36,25 @@ const Friends = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const [friendsData, meData, connectedData] = await Promise.all([ getMyFriends(), getCheckMe(), getConnectedFriends() ]);
-
+        const [friendsData, meData] = await Promise.all([ getMyFriends(), getCheckMe() ]);
         setCurrentUser(meData);
-
-        const connectedIds = Array.isArray(connectedData) 
-          ? connectedData.map(c => typeof c === 'object' ? c.id : c)
-          : [];
 
         const mappedFriends = friendsData.map(f => {
           const isObj = typeof f === 'object' && f !== null;
-          const name = isObj ? (f.nombre_usuario || f.name) : f;
-          const id = isObj ? (f.id || name) : name;
-          const isOnline = connectedIds.includes(id);
-          const coins = isObj ? (f.monedas ?? f.coins ?? 0) : 0;
-          const avatarIcon = isObj ? (f.image || "👤") : "👤";
+          const name = isObj ? f.nombre_usuario : f;
+          const id = isObj ? (f.id_usuario || f.nombre_usuario) : f;
+          const isOnline = onlineFriends.includes(name);
+          const avatarId = isObj ? f.avatar : null;
+          const coins = isObj ? (f.monedas ?? 0) : 0;
 
-          return { id, name, coins, icon: avatarIcon, status: isOnline ? "Online" : "Offline" };
+          return { 
+            id, 
+            name, 
+            coins, 
+            avatarId, 
+            icon: "👤", 
+            status: isOnline ? "Online" : "Offline" 
+          };
         });
         
         setFriendsList(mappedFriends);
@@ -57,7 +65,23 @@ const Friends = () => {
       }
     };
     fetchData();
-  }, []);
+  }, [onlineFriends]);
+
+  useEffect(() => {
+    console.log("📊 FRIENDS PAGE: Lista de nombres Online actual:", onlineFriends);
+    
+    setFriendsList(prevList => {
+      return prevList.map(friend => {
+        const isOnline = onlineFriends.includes(friend.name);
+        console.log(`🧐 Chequeando amigo: ${friend.name} | ¿Está en la lista online?: ${isOnline}`);
+        
+        return {
+          ...friend,
+          status: isOnline ? "Online" : "Offline"
+        };
+      });
+    });
+  }, [onlineFriends]);
 
   useEffect(() => {
     const trimmedQuery = searchQuery.trim();
@@ -69,18 +93,26 @@ const Friends = () => {
       try {
         setIsSearching(true);
         const data = await searchUsers(trimmedQuery);
-        const mapped = data
-          .map(res => ({
-            id: res.id || res,
-            name: res.nombre_usuario || res,
-            coins: res.monedas || 0,
-            icon: res.image || "👤",
+        
+        if (!data || !Array.isArray(data)) return;
+
+        const mapped = data.map(res => {
+          const isObj = typeof res === 'object' && res !== null;
+          
+          return {
+            id: isObj ? (res.id_usuario || res.nombre_usuario || res.id) : res,
+            name: isObj ? (res.nombre_usuario || res.username) : res,
+            coins: isObj ? (res.monedas ?? 0) : 0, 
+            avatarId: isObj ? (res.avatar || res.avatarId) : null,
+            icon: "👤",
             status: ""
-          }))
-          .filter(user => 
-            user.name !== currentUser?.nombre_usuario && 
-            !friendsList.some(f => f.name === user.name)
-          );
+          };
+        })
+        .filter(user => 
+          user.name !== currentUser?.nombre_usuario && 
+          !friendsList.some(f => f.name === user.name)
+        );
+
         setSearchResults(mapped);
       } catch (error) {
         console.error(error);
@@ -107,9 +139,14 @@ const Friends = () => {
     try {
       await acceptFriendRequest(user.id);
       setPendingRequests(prev => prev.filter(r => r.id !== user.id));
-      const newFriend = { ...user, status: "Offline" };
+      const isOnline = onlineFriends.includes(user.name);
+      const newFriend = { 
+        ...user, 
+        status: isOnline ? "Online" : "Offline",
+        avatarId: user.avatarId || null 
+      };
       setFriendsList(prev => [...prev, newFriend]);
-      sendFriendRequestAccepted(user.id);
+      sendFriendRequestAccepted(user.name);
       toast.success(`¡Ahora eres amigo de ${user.name}!`);
     } catch (error) {
       toast.error("No se pudo aceptar la solicitud");
@@ -120,7 +157,7 @@ const Friends = () => {
     try {
       await rejectFriendRequest(user.id);
       setPendingRequests(prev => prev.filter(r => r.id !== user.id));
-      sendFriendRequestRejected(user.id);
+      sendFriendRequestRejected(user.name);
       toast.error("Solicitud rechazada");
     } catch (error) {
       toast.error("Error al rechazar la solicitud");
@@ -132,12 +169,8 @@ const Friends = () => {
       try {
         await sendFriendRequest(selectedFriend.id);
         sendNewFriendRequest(selectedFriend.id);
-
         setSearchResults(prev => prev.filter(u => u.id !== selectedFriend.id));
-        toast.success("Solicitud enviada", { 
-          description: `Invitación enviada a ${selectedFriend.name}.`, 
-          icon: "📩" 
-        });
+        toast.success("Solicitud enviada", { description: `Invitación enviada a ${selectedFriend.name}.`, icon: "📩" });
       } catch (error) {
         toast.error("Error al enviar solicitud");
       }
@@ -145,10 +178,7 @@ const Friends = () => {
       try {
         await deleteFriend(selectedFriend.id);
         setFriendsList(prev => prev.filter(f => f.id !== selectedFriend.id));
-        toast.error("Amigo eliminado", { 
-          description: `${selectedFriend.name} eliminado.`, 
-          icon: "🗑️" 
-        });
+        toast.error("Amigo eliminado", { description: `${selectedFriend.name} eliminado correctamente.`, icon: "🗑️" });
       } catch (error) {
         toast.error("No se pudo eliminar al amigo");
       }
