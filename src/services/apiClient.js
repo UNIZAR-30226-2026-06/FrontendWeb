@@ -19,10 +19,15 @@ export const apiRequest = async (endpoint, method = "GET", body = null) => {
   if (body) {
     config.body = JSON.stringify(body);
   }
-
   const response = await fetch(`${API_URL}${endpoint}`, config);
   
-  const data = response.status !== 204 ? await response.json() : null;
+  const text = await response.text();
+  let data;
+  try {
+    data = text ? JSON.parse(text) : null;
+  } catch (err) {
+    throw new Error("Respuesta no es JSON válido");
+  }
 
   if (!response.ok) {
     if (response.status === 401) {

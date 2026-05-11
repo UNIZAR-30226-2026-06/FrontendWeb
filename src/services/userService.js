@@ -56,6 +56,7 @@ export const getStoreEstilos = () => {
   return apiRequest("/store/estilos", "GET");
 };
 
+export const getAvatarById = (id) => apiRequest(`/store/avatars/${id}`, "GET");
 
 export const getWalletBalance = () => {
   return apiRequest("/wallet/balance", "GET");

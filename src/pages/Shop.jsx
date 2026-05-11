@@ -5,6 +5,7 @@ import ShopFilter from "../components/ShopFilter";
 import ShopItem from "../components/ShopItem";
 import ConfirmModal from "../components/ConfirmModal"; 
 import SearchBar from "../components/SearchBox"; 
+import AnimatedCoins from "../components/AnimatedCoins";
 import "../styles/Shop.css";
 
 import { getStoreAvatars, getStoreEstilos, getWalletBalance, purchaseAvatar, purchaseEstilo, getMyBoughtAvatars, getMyBoughtStyles } from "../services/userService";
@@ -122,7 +123,7 @@ const Shop = () => {
             <h1>Tienda</h1>
           </div>
           <div className="shop-header-actions">
-            <div className="stat-pill coins-pill">💰 {userCoins} Monedas</div>
+            <AnimatedCoins coins={userCoins} className="stat-pill coins-pill" />
             <button className="btn-back-shop" onClick={() => navigate(-1)}>
               <span className="back-icon">↩</span> Volver
             </button>

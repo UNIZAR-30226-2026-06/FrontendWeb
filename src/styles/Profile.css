@@ -141,3 +141,122 @@
 .scrollable-row::-webkit-scrollbar {
   display: none; 
 }
+
+.username-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.username-row h1 {
+  margin: 0;
+}
+
+.btn-edit-profile {
+  background: rgba(96, 212, 128, 0.15);
+  color: #60d480;
+  border: 1.5px solid #60d480;
+  border-radius: 10px;
+  padding: 5px 14px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.btn-edit-profile:hover {
+  background: rgba(96, 212, 128, 0.28);
+  box-shadow: 0 0 8px rgba(96, 212, 128, 0.4);
+}
+
+.edit-profile-panel {
+  background: #15152e;
+  width: 420px;
+  padding: 35px 30px 28px;
+  border-radius: 20px;
+  border: 1px solid #2d2d5a;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.edit-tabs {
+  display: flex;
+  gap: 10px;
+}
+
+.edit-tab-btn {
+  flex: 1;
+  padding: 9px 0;
+  border-radius: 10px;
+  border: 1.5px solid #2d2d5a;
+  background: #0a0a20;
+  color: #aaa;
+  font-weight: bold;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.edit-tab-btn.active {
+  background: rgba(96, 212, 128, 0.15);
+  border-color: #60d480;
+  color: #60d480;
+}
+.edit-tab-btn:hover:not(.active) {
+  border-color: #555;
+  color: #ddd;
+}
+
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.edit-label {
+  color: #aaa;
+  font-size: 0.82rem;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: -4px;
+}
+
+.edit-input {
+  background: #0a0a20;
+  border: 1.5px solid #2d2d5a;
+  border-radius: 10px;
+  color: white;
+  padding: 10px 14px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.edit-input:focus {
+  border-color: #60d480;
+  box-shadow: 0 0 8px rgba(96, 212, 128, 0.25);
+}
+.edit-input::placeholder { color: #444; }
+
+.edit-save-btn {
+  margin-top: 6px;
+  background: linear-gradient(135deg, #60d480, #3eaf60);
+  color: #0a0a20;
+  border: none;
+  border-radius: 12px;
+  padding: 11px;
+  font-weight: 800;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: opacity 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 14px rgba(96, 212, 128, 0.3);
+}
+.edit-save-btn:hover:not(:disabled) {
+  opacity: 0.88;
+  box-shadow: 0 6px 18px rgba(96, 212, 128, 0.45);
+}
+.edit-save-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
