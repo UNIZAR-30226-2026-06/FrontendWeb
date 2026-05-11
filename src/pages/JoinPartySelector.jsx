@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { playSound } from "../utils/sounds";
+import { joinGameByCode } from "../services/gameService";
+import { toast } from "sonner";
 import "../styles/ConnectionSelector.css"; 
 
 const JoinPartySelector = () => {
@@ -12,18 +14,38 @@ const JoinPartySelector = () => {
 
   const config = {
     roles: { title: "Modo con roles", icon: "🎭" },
-    cards: { title: "Modo cartas", icon: "⚡" }
+    cards: { title: "Modo cartas", icon: "⚡" },
+    normal: { title: "Modo normal", icon: "🎴" }
   };
 
   const { title, icon } = config[mode] || config.roles;
 
-  const handleJoin = () => {
-    if (roomCode.trim().length > 0) {
-      playSound('success');
-      console.log(`Uniéndose a la partida ${roomCode} en modo ${mode}`);
-      navigate("/loading", { state: { mode, roomCode, type: 'join' } });
+  const handleJoin = async () => {
+    const code = roomCode.trim();
+    if (code.length === 6) {
+      try {
+        const data = await joinGameByCode(code);
+        
+        const gameId = data.gameId;
+
+        if (!gameId) {
+          toast.error("Error al obtener el ID de la partida");
+          return;
+        }
+
+        playSound('success');
+        navigate("/lobby", { 
+          state: { 
+            mode, 
+            roomCode: code, 
+            gameId: gameId 
+          } 
+        });
+      } catch (error) {
+        toast.error("Código de sala no válido o partida llena");
+      }
     } else {
-      alert("Por favor, introduce un código válido");
+      toast.error("El código debe tener 6 caracteres");
     }
   };
 
