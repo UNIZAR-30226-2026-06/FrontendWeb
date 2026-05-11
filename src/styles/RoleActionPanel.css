@@ -1,0 +1,308 @@
+.rap-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 220px;
+}
+
+.rap-main-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 2px solid rgba(0, 229, 255, 0.4);
+  background: linear-gradient(135deg, rgba(0,229,255,0.12), rgba(0,100,200,0.12));
+  color: #00e5ff;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: background 0.2s, border-color 0.2s, opacity 0.2s;
+  width: 100%;
+}
+
+.rap-main-btn.active {
+  border-color: rgba(0, 229, 255, 0.7);
+}
+
+.rap-main-btn.open {
+  border-color: rgba(0, 229, 255, 0.9);
+  background: linear-gradient(135deg, rgba(0,229,255,0.2), rgba(0,100,200,0.2));
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.rap-main-btn.disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.rap-btn-icon { font-size: 18px; }
+.rap-btn-text { flex: 1; text-align: left; }
+.rap-btn-uses {
+  font-size: 11px;
+  opacity: 0.65;
+  white-space: nowrap;
+}
+.rap-btn-arrow {
+  font-size: 10px;
+  opacity: 0.7;
+  display: inline-block;
+}
+
+.rap-panel {
+  overflow: hidden;
+  border: 2px solid rgba(0, 229, 255, 0.4);
+  border-top: none;
+  border-radius: 0 0 12px 12px;
+  background: rgba(5, 10, 30, 0.97);
+  backdrop-filter: blur(12px);
+}
+
+.rap-panel-inner {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.rap-role-header {
+  text-align: center;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(0,229,255,0.15);
+}
+
+.rap-role-name {
+  font-size: 13px;
+  font-weight: bold;
+  color: rgba(0,229,255,0.7);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.rap-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.rap-label {
+  font-size: 12px;
+  color: rgba(0,229,255,0.55);
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  margin: 0;
+}
+
+.rap-player-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rap-player-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(0,229,255,0.25);
+  background: rgba(0,229,255,0.05);
+  color: #e0eeff;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  text-align: left;
+}
+
+.rap-player-btn.selected {
+  border-color: #00e5ff;
+  background: rgba(0,229,255,0.15);
+  color: #00e5ff;
+  font-weight: bold;
+}
+
+.rap-player-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4d64a1, #35448c);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.rap-card-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 6px 0;
+  max-height: 130px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0,229,255,0.3) transparent;
+}
+
+.rap-card-option {
+  cursor: pointer;
+  flex-shrink: 0;
+  transform-origin: bottom center;
+  filter: brightness(0.8);
+  transition: filter 0.15s;
+}
+
+.rap-card-option.selected {
+  filter: brightness(1.1) drop-shadow(0 0 8px rgba(0,229,255,0.8));
+}
+
+.rap-card-option .uno-card {
+  width: 54px !important;
+  height: 80px !important;
+  font-size: 0.5rem;
+  border-radius: 8px !important;
+}
+
+.rap-color-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+}
+
+.rap-color-btn {
+  padding: 8px 6px;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background: color-mix(in srgb, var(--col) 30%, transparent);
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.rap-color-btn.selected {
+  border-color: var(--col);
+  background: color-mix(in srgb, var(--col) 55%, transparent);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--col) 60%, transparent);
+}
+
+.rap-number-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 5px;
+}
+
+.rap-number-btn {
+  padding: 7px 4px;
+  border-radius: 6px;
+  border: 1px solid rgba(0,229,255,0.25);
+  background: rgba(0,229,255,0.05);
+  color: #e0eeff;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.rap-number-btn.selected {
+  border-color: #00e5ff;
+  background: rgba(0,229,255,0.2);
+  color: #00e5ff;
+  box-shadow: 0 0 8px rgba(0,229,255,0.4);
+}
+
+.rap-confirm-btn {
+  padding: 11px;
+  border-radius: 8px;
+  border: none;
+  background: linear-gradient(135deg, #00b894, #00e5ff);
+  color: #001020;
+  font-weight: bold;
+  font-size: 13px;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: opacity 0.2s;
+  margin-top: 4px;
+}
+
+.rap-confirm-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.rap-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 20, 0.82);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rap-result-panel {
+  background: rgba(5, 10, 35, 0.98);
+  border: 2px solid rgba(0,229,255,0.5);
+  border-radius: 20px;
+  padding: 32px 28px;
+  max-width: 90vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  box-shadow: 0 0 60px rgba(0,229,255,0.15);
+}
+
+.rap-result-title {
+  margin: 0;
+  font-size: 20px;
+  color: #00e5ff;
+  font-weight: bold;
+  text-align: center;
+}
+
+.rap-result-title span {
+  color: white;
+}
+
+.rap-spy-hand {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  max-width: 500px;
+}
+
+
+.rap-peek { max-width: 300px; }
+
+.rap-peek-card {
+  display: flex;
+  justify-content: center;
+}
+
+.rap-empty {
+  color: rgba(255,255,255,0.4);
+  font-style: italic;
+  margin: 0;
+}
+
+.rap-close-btn {
+  padding: 10px 28px;
+  border-radius: 10px;
+  border: 1px solid rgba(0,229,255,0.4);
+  background: rgba(0,229,255,0.08);
+  color: #00e5ff;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+
+.rap-close-btn:hover {
+  background: rgba(0,229,255,0.18);
+}
