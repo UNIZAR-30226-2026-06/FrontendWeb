@@ -1,0 +1,95 @@
+.hand-side-buttons {
+  position: fixed;
+  right: 24px;
+  bottom: 90px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  z-index: 45;
+  pointer-events: none;
+}
+
+.hand-side-buttons > * {
+  pointer-events: auto;
+}
+
+.hsb-btn {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(15, 20, 40, 0.85);
+  border: 2px solid #00e5ff;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 4px 14px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(0, 229, 255, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.hsb-btn:hover {
+  border-color: #67f3ff;
+  background: rgba(20, 30, 60, 0.9);
+}
+
+.hsb-icon {
+  font-size: 1.6rem;
+  line-height: 1;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6));
+}
+
+.hsb-role {
+  border-color: #a78bfa;
+  box-shadow:
+    0 4px 14px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(167, 139, 250, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.hsb-role:hover {
+  border-color: #c4b5fd;
+}
+
+.hsb-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: 11px;
+  background: linear-gradient(135deg, #ff4757 0%, #c92a2a 100%);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 900;
+  font-family: 'Arial Black', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgba(15, 20, 40, 0.95);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5), 0 0 8px rgba(255, 71, 87, 0.5);
+  line-height: 1;
+}
+
+@media (max-width: 768px) {
+  .hand-side-buttons {
+    right: 12px;
+    bottom: 80px;
+    gap: 10px;
+  }
+  .hsb-btn {
+    width: 48px;
+    height: 48px;
+  }
+  .hsb-icon {
+    font-size: 1.4rem;
+  }
+}

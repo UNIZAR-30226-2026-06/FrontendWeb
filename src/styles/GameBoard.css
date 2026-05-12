@@ -11,8 +11,8 @@
   content: "";
   position: absolute;
   inset: 0;
-  background-size: cover;
-  background-position: center;
+  background-size: 100% 100%;
+  background-position: center top;
   background-repeat: no-repeat;
   z-index: 0;
   pointer-events: none;
@@ -36,56 +36,56 @@
   background-color: #0a1330;
 }
 .game-board-layout.style-basic::before {
-  background-image: url('/img/clasico.png');
-  opacity: 0.18;
-  filter: blur(2px) saturate(0.9);
+  background-image: url('/img/board-basic.png');
+  opacity: 0.70;
+  filter: saturate(1.05);
 }
 .game-board-layout.style-basic::after {
   background:
-    radial-gradient(ellipse at center, rgba(12, 24, 60, 0.55) 0%, rgba(5, 10, 30, 0.92) 100%),
-    linear-gradient(135deg, rgba(0, 229, 255, 0.06) 0%, transparent 50%, rgba(255, 255, 255, 0.04) 100%);
+    radial-gradient(ellipse at center, rgba(5, 10, 30, 0.15) 0%, rgba(5, 10, 30, 0.70) 100%),
+    linear-gradient(135deg, rgba(0, 229, 255, 0.05) 0%, transparent 50%, rgba(255, 255, 255, 0.03) 100%);
 }
 
 .game-board-layout.style-neon {
   background-color: #1a0b2e;
 }
 .game-board-layout.style-neon::before {
-  background-image: url('/img/neon.png');
-  opacity: 0.22;
-  filter: blur(3px) saturate(1.1);
+  background-image: url('/img/board-neon.png');
+  opacity: 0.78;
+  filter: saturate(1.1);
 }
 .game-board-layout.style-neon::after {
   background:
-    radial-gradient(ellipse at center, rgba(40, 10, 70, 0.55) 0%, rgba(15, 5, 35, 0.92) 100%),
-    linear-gradient(135deg, rgba(255, 0, 200, 0.08) 0%, transparent 50%, rgba(0, 229, 255, 0.08) 100%);
+    radial-gradient(ellipse at center, rgba(15, 5, 35, 0.12) 0%, rgba(15, 5, 35, 0.72) 100%),
+    linear-gradient(135deg, rgba(255, 0, 200, 0.06) 0%, transparent 50%, rgba(0, 229, 255, 0.06) 100%);
 }
 
 .game-board-layout.style-gold {
   background-color: #1a0f00;
 }
 .game-board-layout.style-gold::before {
-  background-image: url('/img/dorado.png');
-  opacity: 0.20;
-  filter: blur(2px) saturate(1.1);
+  background-image: url('/img/board-gold.png');
+  opacity: 0.72;
+  filter: saturate(1.05);
 }
 .game-board-layout.style-gold::after {
   background:
-    radial-gradient(ellipse at center, rgba(40, 25, 0, 0.55) 0%, rgba(15, 8, 0, 0.93) 100%),
-    linear-gradient(135deg, rgba(255, 200, 80, 0.08) 0%, transparent 50%, rgba(255, 215, 100, 0.06) 100%);
+    radial-gradient(ellipse at center, rgba(15, 8, 0, 0.15) 0%, rgba(15, 8, 0, 0.75) 100%),
+    linear-gradient(135deg, rgba(255, 200, 80, 0.06) 0%, transparent 50%, rgba(255, 215, 100, 0.05) 100%);
 }
 
 .game-board-layout.style-retro {
   background-color: #0f2024;
 }
 .game-board-layout.style-retro::before {
-  background-image: url('/img/retro.png');
-  opacity: 0.20;
-  filter: blur(2px) saturate(0.95);
+  background-image: url('/img/board-retro.png');
+  opacity: 0.70;
+  filter: saturate(0.95);
 }
 .game-board-layout.style-retro::after {
   background:
-    radial-gradient(ellipse at center, rgba(20, 50, 55, 0.50) 0%, rgba(10, 25, 30, 0.92) 100%),
-    linear-gradient(135deg, rgba(255, 140, 50, 0.06) 0%, transparent 50%, rgba(240, 234, 214, 0.05) 100%);
+    radial-gradient(ellipse at center, rgba(10, 25, 30, 0.12) 0%, rgba(10, 25, 30, 0.72) 100%),
+    linear-gradient(135deg, rgba(255, 140, 50, 0.05) 0%, transparent 50%, rgba(240, 234, 214, 0.04) 100%);
 }
 
 .opponent-container {
@@ -186,21 +186,16 @@
 }
 
 .card-back-gold {
-  background: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728);
-  border: 2px solid #5d4a1e;
+  background: linear-gradient(145deg, #3d2200 0%, #bf953f 35%, #fcf6ba 50%, #b38728 65%, #3d2200 100%);
+  border: 2px solid #f5c842;
+  box-shadow: 0 0 0 1px #7a5200, 0 4px 12px rgba(0,0,0,0.5);
 }
 .card-back-gold .back-inner {
-  color: #3d2b00;
+  color: #3d2200;
   font-family: 'Arial Black', sans-serif;
   font-size: 0.9rem;
-  text-shadow: 1px 1px 0px rgba(255,255,255,0.5);
-}
-.card-back-gold::after {
-  content: "";
-  position: absolute;
-  top: -50%; left: -50%; width: 200%; height: 200%;
-  background: linear-gradient(45deg, transparent 45%, rgba(255,255,255,0.3) 50%, transparent 55%);
-  animation: gold-shine 3s infinite;
+  font-weight: 900;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.4);
 }
 
 .card-back-retro {
@@ -252,8 +247,32 @@
   left: 50%;
   transform: translateX(-50%);
   display: flex;
+  flex-direction: column;
   align-items: center;
+  gap: 0;
   z-index: 100;
+  isolation: isolate;
+}
+
+.hand-and-arc-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.turn-arc-wrapper {
+  width: 480px;
+  max-width: 92vw;
+  pointer-events: none;
+  margin-bottom: -38px;
+  z-index: 50;
+}
+
+.turn-arc-svg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
 }
 
 .my-hand-container.fan-style {
@@ -387,4 +406,48 @@
   0% { opacity: 0.55; transform: scale(1); }
   60% { opacity: 0; transform: scale(1.45); }
   100% { opacity: 0; transform: scale(1.45); }
+}
+
+.arc-fill.urgent {
+  animation: arc-urgent-glow 0.6s ease-in-out infinite alternate;
+}
+
+@keyframes arc-urgent-glow {
+  from { filter: drop-shadow(0 0 2px #ff5252); }
+  to   { filter: drop-shadow(0 0 6px #ff5252); }
+}
+
+.arc-dot-urgent {
+  animation: dot-urgent-pulse 0.5s ease-in-out infinite alternate;
+}
+
+@keyframes dot-urgent-pulse {
+  from { opacity: 1; }
+  to   { opacity: 0.6; }
+}
+
+.arc-seconds-text {
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  filter: drop-shadow(0 0 3px currentColor);
+}
+
+.arc-seconds-text.warning {
+  animation: seconds-warning-pulse 0.9s ease-in-out infinite alternate;
+}
+
+.arc-seconds-text.urgent {
+  animation: seconds-urgent-pop 0.45s ease-in-out infinite alternate;
+}
+
+@keyframes seconds-warning-pulse {
+  from { opacity: 1; }
+  to   { opacity: 0.7; }
+}
+
+@keyframes seconds-urgent-pop {
+  from { font-size: 11px; }
+  to   { font-size: 14px; }
 }
