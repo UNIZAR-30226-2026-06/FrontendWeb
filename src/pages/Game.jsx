@@ -7,8 +7,8 @@ import GameHeader from "../components/GameHeader";
 import GameBoard from "../components/GameBoard";
 import SettingsModal from "../components/SettingsModal";
 import GameChat from "../components/GameChat";
-import RoleCard from "../components/RoleCard";
-import RoleActionPanel from "../components/RoleActionPanel";
+import RoleOverlay from "../components/RoleOverlay";
+import HandSideButtons from "../components/HandSideButtons";
 import GameOverScreen from "../components/GameOverScreen";
 import PauseScreen from "../components/PauseScreen";
 import ResumeWaitingScreen from "../components/ResumeWaitingScreen";
@@ -21,7 +21,6 @@ import { getMyProfile } from "../services/userService";
 import { getPlayerRole } from "../services/roleService";
 import { useSocket } from "../context/SocketContext";
 import "../styles/GameScreen.css";
-import "../styles/RoleDisplayArea.css";
 
 const ESTILOS_MAP = { 2: "basic", 3: "neon", 4: "gold", 5: "retro" };
 
@@ -38,6 +37,8 @@ const Game = () => {
 
   const [showSettings, setShowSettings] = useState(false);
   const [showChat, setShowChat] = useState(false);
+  const [showRolePanel, setShowRolePanel] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
   const [gameOver, setGameOver] = useState(null);
   const [gameState, setGameState] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
@@ -54,12 +55,16 @@ const Game = () => {
   const [thinkingBotId, setThinkingBotId] = useState(null);
   const [colorPickerState, setColorPickerState] = useState(null);
   const [pauseVoters, setPauseVoters] = useState([]);
+  const [turnSecondsLeft, setTurnSecondsLeft] = useState(null);
 
   const hasRequestedResume = useRef(false);
   const hasVotedPause = useRef(false);
   const hasVotedResume = useRef(false); 
   const roleRevealedRef = useRef(false);
   const currentUserRef = useRef(null);
+  const showChatRef = useRef(false);
+
+  useEffect(() => { showChatRef.current = showChat; }, [showChat]);
 
   const loadData = useCallback(async (retryCount = 0) => {
     try {
@@ -87,7 +92,8 @@ const Game = () => {
       setCurrentUser(me);
       currentUserRef.current = me;
       setActiveStyle(ESTILOS_MAP[profile.estilo] || "basic");
-      setMyAvatar(profile.avatar || null);
+      const myPlayerState = state.players?.find(p => p.id === myUsername);
+      setMyAvatar(myPlayerState?.avatarImage || profile.avatar || null);
 
       if (state.phase === "paused") {
         setIsPaused(true);
@@ -112,6 +118,7 @@ const Game = () => {
         if (!roleRevealedRef.current) {
           roleRevealedRef.current = true;
           setRoleRevealed(true);
+          setShowRolePanel(true);
         }
       }
     } catch (e) {
@@ -148,8 +155,23 @@ const Game = () => {
   useEffect(() => { loadDataRef.current = loadData; }, [loadData]);
 
   useEffect(() => {
+    if (!gameState?.turnDeadline) { setTurnSecondsLeft(null); return; }
+    const tick = () => {
+      const secs = Math.max(0, Math.ceil((gameState.turnDeadline - Date.now()) / 1000));
+      setTurnSecondsLeft(secs);
+      if (secs <= 0) clearInterval(iv);
+    };
+    tick();
+    const iv = setInterval(tick, 500);
+    return () => clearInterval(iv);
+  }, [gameState?.turnDeadline]);
+
+  useEffect(() => {
     if (!socket) return;
     const refresh = () => loadDataRef.current();
+
+    socket.on("turno_expirado", () => { refresh(); });
+
 
     socket.on("game_state_updated", refresh);
     socket.on("nuevo_jugador", refresh);
@@ -169,12 +191,28 @@ const Game = () => {
 
     socket.on("game_finished", (data) => {
       setThinkingBotId(null);
+      const me = currentUserRef.current;
+      if (me) {
+        const myId = me.nombre_usuario || me.nombre;
+        if (data.monedasPerdedores && data.monedasPerdedores[myId] !== undefined) {
+          const updated = { ...me, monedas: data.monedasPerdedores[myId] };
+          setCurrentUser(updated);
+          currentUserRef.current = updated;
+        } else if (data.monedasTotales && myId === data.winner) {
+          const updated = { ...me, monedas: data.monedasTotales };
+          setCurrentUser(updated);
+          currentUserRef.current = updated;
+        }
+      }
       setGameOver(data);
       refresh();
     });
 
     socket.on("nuevoMensajeChat", (msg) => {
       setChatMessages(prev => [...prev, msg]);
+      if (!showChatRef.current) {
+        setUnreadCount(prev => prev + 1);
+      }
     });
 
     socket.on("voto_pausa", (data) => {
@@ -262,6 +300,7 @@ const Game = () => {
       socket.off("voto_reanudar_registrado");
       socket.off("partida_reanudada");
       socket.off("voto_reanudar_retirado");
+      socket.off("turno_expirado");
     };
   }, [socket]);
 
@@ -417,6 +456,21 @@ const Game = () => {
   const isBotGame = humanPlayers === 1;
   const showPause = !isPublic;
 
+  const handleOpenChat = () => {
+    setShowChat(true);
+    setUnreadCount(0);
+  };
+
+  const handleCloseChat = () => {
+    setShowChat(false);
+  };
+
+  const roleCanUse = !!(
+    playerRole?.canUseNow &&
+    isMyTurn &&
+    ((playerRole?.maxUses ?? 0) - (playerRole?.uses ?? 0)) > 0
+  );
+
   return (
     <div className="game-full-layout">
 
@@ -425,7 +479,6 @@ const Game = () => {
         pausedCount={pauseVoters.length}
         onPauseClick={handlePauseClick}
         onMenuClick={() => setShowSettings(true)}
-        onChatClick={() => setShowChat(!showChat)}
         showPause={showPause}
       />
 
@@ -441,24 +494,33 @@ const Game = () => {
         currentTurnId={gameState?.currentTurn}
         myAvatar={myAvatar}
         currentUserId={myId}
+        turnSecondsLeft={isMyTurn ? turnSecondsLeft : null}
+      />
+
+      <HandSideButtons
+        onChatClick={handleOpenChat}
+        onRoleClick={() => setShowRolePanel(true)}
+        unreadCount={unreadCount}
+        showRoleButton={rolesActivos}
+        roleCanUse={roleCanUse}
       />
 
       {showChat && (
-        <GameChat gameId={gameId} messages={chatMessages} onClose={() => setShowChat(false)} />
+        <GameChat gameId={gameId} messages={chatMessages} onClose={handleCloseChat} />
       )}
 
       {rolesActivos && (
-        <div className="role-display-area">
-          <RoleCard role={playerRole} isRevealed={roleRevealed} />
-          <RoleActionPanel
-            role={playerRole}
-            gameId={gameId}
-            isPlayerTurn={isMyTurn}
-            players={opponents}
-            myCards={myCards}
-            onRoleUsed={() => getPlayerRole(gameId).then(setPlayerRole).catch(() => {})}
-          />
-        </div>
+        <RoleOverlay
+          open={showRolePanel}
+          onClose={() => setShowRolePanel(false)}
+          role={playerRole}
+          isRevealed={roleRevealed}
+          gameId={gameId}
+          isPlayerTurn={isMyTurn}
+          players={opponents}
+          myCards={myCards}
+          onRoleUsed={() => getPlayerRole(gameId).then(setPlayerRole).catch(() => {})}
+        />
       )}
 
       {showSettings && <SettingsModal onClose={() => setShowSettings(false)} mode={mode} customFlags={customFlags} isPublic={isPublic} />}
