@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { apiRequest } from "../services/apiClient";
 import "../styles/GameOverScreen.css";
 
 const CONFETTI_COLORS = ["#62b155","#00e5ff","#ECD407","#D72600","#ffffff","#a78bfa"];
@@ -105,28 +104,11 @@ const PlayerResultCard = ({ player, index, isWinner, isMe, coinsEarned }) => (
 const GameOverScreen = ({ data, players = [], currentUserId, onClose }) => {
   const navigate    = useNavigate();
   const canvasRef   = useRef(null);
-  const [coinsAdded, setCoinsAdded] = useState(false);
-  const [myNewTotal, setMyNewTotal] = useState(null);
-
   const isWinner   = data.winner === currentUserId;
-  const isBot      = data.isBot;
   const winnerCoins = data.recompensa || 50;
   const loserCoins  = 10;
 
   useConfetti(canvasRef, isWinner);
-
-  useEffect(() => {
-    if (coinsAdded) return;
-    setCoinsAdded(true);
-
-    const amount = isWinner ? winnerCoins : loserCoins;
-
-    if (!isBot || isWinner) {
-      apiRequest("/wallet/add", "POST", { amount })
-        .then(res => { if (res?.coins != null) setMyNewTotal(res.coins); })
-        .catch(() => {});
-    }
-  }, []);
 
   const handleGoHome = () => navigate("/home");
 
@@ -224,16 +206,7 @@ const GameOverScreen = ({ data, players = [], currentUserId, onClose }) => {
               +<AnimatedCoins target={isWinner ? winnerCoins : loserCoins} duration={1400} delay={700} />
             </span>
           </div>
-          {myNewTotal != null && (
-            <motion.span
-              className="gor-total-coins"
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 2.2 }}
-            >
-              Total: <AnimatedCoins target={myNewTotal} duration={800} delay={2400} /> 🪙
-            </motion.span>
-          )}
+
         </motion.div>
 
         <div className="gor-players-list">
@@ -265,14 +238,6 @@ const GameOverScreen = ({ data, players = [], currentUserId, onClose }) => {
             whileTap={{ scale: 0.96 }}
           >
             🏠 Volver al inicio
-          </motion.button>
-          <motion.button
-            className="gor-btn gor-btn-secondary"
-            onClick={onClose}
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
-          >
-            Ver tablero
           </motion.button>
         </motion.div>
 

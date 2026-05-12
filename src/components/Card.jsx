@@ -304,6 +304,7 @@ const Card = ({ value, color = 'blue', type = 'normal', style = 'basic', chosenC
 
   return (
     <div className={['uno-card', `style-${style}`, type, colorClass, hasVortex ? 'vortex-anim' : '', isSpecial ? 'is-special' : '', borderTint].filter(Boolean).join(' ')}>
+      {style === 'gold' && <div className="gold-shine-overlay" aria-hidden="true" />}
       <div className="card-inner">
         {style === 'retro' && <div className="retro-texture" />}
         <div className="corner top-left">
