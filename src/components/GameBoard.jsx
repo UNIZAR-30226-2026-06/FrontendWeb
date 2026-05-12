@@ -24,9 +24,9 @@ const FlyingCard = ({ card, cardStyle, originRef, centerRef, onComplete }) => {
   );
 };
 
-const normalizeAvatar = (img) => { if (!img) return null; if (img.startsWith("/") || img.startsWith("http")) return img; if (img.includes(".")) return `/img/${img}`; return null; };
+const normalizeAvatar = (img) => { if (!img) return null; if (img.startsWith("/") || img.startsWith("http")) return img; if (img.includes(".")) return `/img/${img}`; return img; }; 
 
-const GameBoard = ({ myCards = [], currentTableCard, opponents = [], cardStyle = "basic", onPlayCard, onDrawCard, isMyTurn = false, thinkingBotId = null, currentTurnId = null, myAvatar = null, currentUserId = null }) => {
+const GameBoard = ({ myCards = [], currentTableCard, opponents = [], cardStyle = "basic", onPlayCard, onDrawCard, isMyTurn = false, thinkingBotId = null, currentTurnId = null, myAvatar = null, currentUserId = null, turnSecondsLeft = null }) => {
   const centerRef = useRef(null);
   const [flyingCard, setFlyingCard] = useState(null);
   const cardRefs = useRef({});
@@ -41,9 +41,8 @@ const GameBoard = ({ myCards = [], currentTableCard, opponents = [], cardStyle =
     const isThinking = !!thinkingBotId && playerId === thinkingBotId;
     const isCurrent = !!currentTurnId && playerId === currentTurnId;
 
-    const avatarUrl = !player.isBot && playerId === currentUserId
-      ? normalizeAvatar(myAvatar)
-      : null;
+    const rawAvatarImg = player.avatarImage ?? (!player.isBot && playerId === currentUserId ? myAvatar : null);
+    const avatarUrl = normalizeAvatar(rawAvatarImg);
 
     return (
       <div className={`opponent-container ${pos} ${isCurrent ? "is-current-turn" : ""} ${isThinking ? "is-thinking" : ""}`}>
@@ -51,9 +50,11 @@ const GameBoard = ({ myCards = [], currentTableCard, opponents = [], cardStyle =
           <div className="avatar-glow">
             {player.isBot
               ? "🤖"
-              : avatarUrl
+              : avatarUrl && (avatarUrl.startsWith('/') || avatarUrl.startsWith('http'))
                 ? <img src={avatarUrl} alt="avatar" style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "50%" }} />
-                : "👤"
+                : avatarUrl
+                  ? <span style={{ fontSize: "1.6rem", lineHeight: 1 }}>{avatarUrl}</span>
+                  : "👤"
             }
           </div>
           <div className="avatar-tag">
@@ -195,7 +196,70 @@ const GameBoard = ({ myCards = [], currentTableCard, opponents = [], cardStyle =
       </div>
 
       <div className="player-interaction-area">
-        <motion.div
+        <div className="hand-and-arc-wrapper">
+          {isMyTurn && turnSecondsLeft !== null && (
+            <div className="turn-arc-wrapper">
+              <svg
+                className="turn-arc-svg"
+                viewBox="0 0 420 70"
+                xmlns="http://www.w3.org/2000/svg"
+                preserveAspectRatio="xMidYMid meet"
+              >
+                <defs>
+                  <linearGradient id="arcGradNormal" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%"   stopColor="#0097a7" />
+                    <stop offset="50%"  stopColor="#00e5ff" />
+                    <stop offset="100%" stopColor="#0097a7" />
+                  </linearGradient>
+                  <linearGradient id="arcGradWarning" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%"   stopColor="#e65100" />
+                    <stop offset="50%"  stopColor="#ffd740" />
+                    <stop offset="100%" stopColor="#e65100" />
+                  </linearGradient>
+                  <linearGradient id="arcGradUrgent" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%"   stopColor="#b71c1c" />
+                    <stop offset="50%"  stopColor="#ff5252" />
+                    <stop offset="100%" stopColor="#b71c1c" />
+                  </linearGradient>
+                  <filter id="arcGlow" x="-10%" y="-80%" width="120%" height="260%">
+                    <feGaussianBlur stdDeviation="1.5" result="blur" />
+                    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                  </filter>
+                </defs>
+
+                <path
+                  d="M 15 50 Q 210 5 405 50"
+                  fill="none"
+                  stroke="rgba(255,255,255,0.08)"
+                  strokeWidth="4"
+                  strokeLinecap="round"
+                />
+
+                <path
+                  className={`arc-fill ${turnSecondsLeft <= 5 ? 'urgent' : turnSecondsLeft <= 10 ? 'warning' : ''}`}
+                  d="M 15 50 Q 210 5 405 50"
+                  fill="none"
+                  stroke={turnSecondsLeft <= 5 ? "url(#arcGradUrgent)" : turnSecondsLeft <= 10 ? "url(#arcGradWarning)" : "url(#arcGradNormal)"}
+                  strokeWidth="4"
+                  strokeLinecap="round"
+                  strokeDasharray="445"
+                  strokeDashoffset={445 - (445 * Math.min(1, turnSecondsLeft / 30))}
+                  filter="url(#arcGlow)"
+                  style={{ transition: "stroke-dashoffset 0.7s cubic-bezier(0.4,0,0.2,1), stroke 0.5s ease" }}
+                />
+
+                <text
+                  x="210" y="44"
+                  textAnchor="middle"
+                  className={`arc-seconds-text ${turnSecondsLeft <= 5 ? 'urgent' : turnSecondsLeft <= 10 ? 'warning' : ''}`}
+                  fill={turnSecondsLeft <= 5 ? "#ff5252" : turnSecondsLeft <= 10 ? "#ffd740" : "#00e5ff"}
+                >
+                  {turnSecondsLeft <= 5 ? `¡${turnSecondsLeft}!` : `${turnSecondsLeft}s`}
+                </text>
+              </svg>
+            </div>
+          )}
+          <motion.div
           className="my-hand-container fan-style"
           animate={
             isMyTurn
@@ -251,6 +315,7 @@ const GameBoard = ({ myCards = [], currentTableCard, opponents = [], cardStyle =
             );
           })}
         </motion.div>
+        </div>
       </div>
     </div>
   );

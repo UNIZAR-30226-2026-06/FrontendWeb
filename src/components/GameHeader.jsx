@@ -9,7 +9,6 @@ const GameHeader = ({
   myPauseVote = false,
   onPauseClick,
   onMenuClick,
-  onChatClick,
   showPause = true
 }) => {
   const [seconds, setSeconds] = useState(0);
@@ -52,9 +51,6 @@ const GameHeader = ({
       </div>
 
       <div className="header-right">
-        {onChatClick && (
-          <button className="chat-btn" onClick={onChatClick} title="Chat">💬</button>
-        )}
         <button className="burger-menu-btn" onClick={onMenuClick}>
           <span></span><span></span><span></span>
         </button>
