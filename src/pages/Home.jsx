@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import logoImg from "/img/logo.png";
 import GameModeCard from "../components/GameModeCard";
 import HomeNavigation from "../components/HomeNavigation";
-import { getMyProfile } from "../services/userService";
+import { getMyProfile, getMyBoughtAvatars } from "../services/userService";
 import { playSound } from "../utils/sounds";
 import AnimatedCoins from "../components/AnimatedCoins";
 import "../styles/Home.css";
@@ -26,17 +26,15 @@ export default function Home() {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const profile = await getMyProfile();
-        
+        const [profile, avatars] = await Promise.all([getMyProfile(), getMyBoughtAvatars()]);
+
         setUsername(profile.nombre_usuario || "Jugador1");
         setCoins(profile.monedas || 0);
-        
-        const savedAvatar = localStorage.getItem("userAvatar");
-        if (savedAvatar) {
-          setUserAvatar(savedAvatar);
-        } else {
-          setUserAvatar("👤");
-        }
+
+        const activeAvatar = avatars.find(av => Number(av.id_avatar) === Number(profile.avatar));
+        const avatarImage = activeAvatar?.image || "👤";
+        setUserAvatar(avatarImage);
+        localStorage.setItem("userAvatar", avatarImage);
       } catch (error) {
         const savedName = localStorage.getItem("username");
         if (savedName) setUsername(savedName);
@@ -136,7 +134,7 @@ export default function Home() {
             </button>
           </div>
 
-          <HomeNavigation />
+          <HomeNavigation userAvatar={userAvatar} />
         </div>
       </div>
     </div>

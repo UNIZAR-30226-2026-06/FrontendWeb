@@ -18,7 +18,8 @@ const Friends = () => {
     sendNewFriendRequest, 
     sendFriendRequestAccepted, 
     sendFriendRequestRejected,
-    onlineFriends 
+    onlineFriends,
+    socket
   } = useSocket();
   
   const [friendsList, setFriendsList] = useState([]);
@@ -32,6 +33,9 @@ const Friends = () => {
   const [searchResults, setSearchResults] = useState([]); 
   const [isSearching, setIsSearching] = useState(false);
 
+  const onlineFriendsRef = React.useRef(onlineFriends);
+  useEffect(() => { onlineFriendsRef.current = onlineFriends; }, [onlineFriends]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -43,18 +47,11 @@ const Friends = () => {
           const isObj = typeof f === 'object' && f !== null;
           const name = isObj ? f.nombre_usuario : f;
           const id = isObj ? (f.id_usuario || f.nombre_usuario) : f;
-          const isOnline = onlineFriends.includes(name);
           const avatarId = isObj ? f.avatar : null;
           const coins = isObj ? (f.monedas ?? 0) : 0;
+          const status = onlineFriendsRef.current.includes(name) ? "Online" : "Offline";
 
-          return { 
-            id, 
-            name, 
-            coins, 
-            avatarId, 
-            icon: "👤", 
-            status: isOnline ? "Online" : "Offline" 
-          };
+          return { id, name, coins, avatarId, icon: "👤", status };
         });
         
         setFriendsList(mappedFriends);
@@ -65,23 +62,53 @@ const Friends = () => {
       }
     };
     fetchData();
-  }, [onlineFriends]);
+  }, []); 
 
   useEffect(() => {
-    console.log("📊 FRIENDS PAGE: Lista de nombres Online actual:", onlineFriends);
-    
-    setFriendsList(prevList => {
-      return prevList.map(friend => {
-        const isOnline = onlineFriends.includes(friend.name);
-        console.log(`🧐 Chequeando amigo: ${friend.name} | ¿Está en la lista online?: ${isOnline}`);
-        
-        return {
-          ...friend,
-          status: isOnline ? "Online" : "Offline"
-        };
-      });
-    });
+    setFriendsList(prev => prev.map(friend => ({
+      ...friend,
+      status: onlineFriends.includes(friend.name) ? "Online" : "Offline"
+    })));
   }, [onlineFriends]);
+
+  // Realtime: actualiza la lista cuando el otro usuario acepta o elimina
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleFriendAdded = (payload) => {
+      const name = payload?.nombre_usuario;
+      if (!name) return;
+      setFriendsList(prev => {
+        if (prev.some(f => f.name === name)) return prev;
+        const isOnline = onlineFriendsRef.current.includes(name);
+        return [
+          ...prev,
+          {
+            id: name,
+            name,
+            coins: payload.monedas ?? 0,
+            avatarId: payload.avatar ?? null,
+            icon: "👤",
+            status: isOnline ? "Online" : "Offline"
+          }
+        ];
+      });
+    };
+
+    const handleFriendRemoved = (payload) => {
+      const name = payload?.nombre_usuario;
+      if (!name) return;
+      setFriendsList(prev => prev.filter(f => f.name !== name && f.id !== name));
+    };
+
+    socket.on("friends:added", handleFriendAdded);
+    socket.on("friends:removed", handleFriendRemoved);
+
+    return () => {
+      socket.off("friends:added", handleFriendAdded);
+      socket.off("friends:removed", handleFriendRemoved);
+    };
+  }, [socket]);
 
   useEffect(() => {
     const trimmedQuery = searchQuery.trim();
@@ -135,19 +162,30 @@ const Friends = () => {
     setShowModal(true);
   };
 
+  const refetchFriends = async () => {
+    try {
+      const friendsData = await getMyFriends();
+      const mappedFriends = friendsData.map(f => {
+        const isObj = typeof f === 'object' && f !== null;
+        const name = isObj ? f.nombre_usuario : f;
+        const id = isObj ? (f.id_usuario || f.nombre_usuario) : f;
+        const avatarId = isObj ? f.avatar : null;
+        const coins = isObj ? (f.monedas ?? 0) : 0;
+        const status = onlineFriendsRef.current.includes(name) ? "Online" : "Offline";
+        return { id, name, coins, avatarId, icon: "👤", status };
+      });
+      setFriendsList(mappedFriends);
+    } catch (_) {
+    }
+  };
+
   const handleAcceptRequest = async (user) => {
     try {
       await acceptFriendRequest(user.id);
       setPendingRequests(prev => prev.filter(r => r.id !== user.id));
-      const isOnline = onlineFriends.includes(user.name);
-      const newFriend = { 
-        ...user, 
-        status: isOnline ? "Online" : "Offline",
-        avatarId: user.avatarId || null 
-      };
-      setFriendsList(prev => [...prev, newFriend]);
       sendFriendRequestAccepted(user.name);
       toast.success(`¡Ahora eres amigo de ${user.name}!`);
+      refetchFriends();
     } catch (error) {
       toast.error("No se pudo aceptar la solicitud");
     }
@@ -177,8 +215,8 @@ const Friends = () => {
     } else {
       try {
         await deleteFriend(selectedFriend.id);
-        setFriendsList(prev => prev.filter(f => f.id !== selectedFriend.id));
         toast.error("Amigo eliminado", { description: `${selectedFriend.name} eliminado correctamente.`, icon: "🗑️" });
+        refetchFriends();
       } catch (error) {
         toast.error("No se pudo eliminar al amigo");
       }
