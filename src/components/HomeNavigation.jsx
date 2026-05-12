@@ -1,18 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { playSound } from "../utils/sounds";
 import "../styles/HomeNavigation.css";
 
-const HomeNavigation = () => {
+const HomeNavigation = ({ userAvatar = "👤" }) => {
   const navigate = useNavigate();
-  const [userAvatar, setUserAvatar] = useState("👤");
-
-  useEffect(() => {
-    const savedAvatar = localStorage.getItem("userAvatar");
-    if (savedAvatar) {
-      setUserAvatar(savedAvatar);
-    }
-  }, []);
 
   const navItems = [
     { label: "Amigos", icon: "👥", path: "/friends" },

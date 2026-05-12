@@ -279,7 +279,6 @@ const RoleActionPanel = ({ role, gameId, isPlayerTurn, players = [], myCards = [
           animate={canUse ? { boxShadow: ["0 0 0px rgba(0,229,255,0)","0 0 20px rgba(0,229,255,0.5)","0 0 0px rgba(0,229,255,0)"] } : {}}
           transition={canUse ? { duration: 1.8, repeat: Infinity, ease: "easeInOut" } : {}}
         >
-          <span className="rap-btn-icon">{role.role?.icon || "🎭"}</span>
           <span className="rap-btn-text">
             {isLoading ? "Usando..." : (needsPanel && isOpen ? "Cancelar" : "Usar Rol")}
           </span>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { getPausedGames } from "../services/gameService";
+import { getPausedGames, getGameInfo } from "../services/gameService";
 import PausedGameItem from "../components/PausedGameItem";
 import "../styles/ConnectionSelector.css"; 
 import "../styles/CustomGameSelector.css"; 
@@ -29,9 +29,36 @@ const PartidasPausadas = () => {
     fetchGames();
   }, []);
 
-  const handleResume = (gameId) => {
+  const handleResume = async (gameId) => {
     toast.info("Reanudando partida...");
-    navigate("/game", { state: { gameId, isResuming: true } });
+    try {
+      const info = await getGameInfo(gameId);
+      const rolesMode = info?.rolesMode ?? false;
+      const specialCardsMode = info?.specialCardsMode ?? false;
+
+      let mode = "clasico";
+      if (rolesMode && specialCardsMode) mode = "custom";
+      else if (rolesMode) mode = "roles";
+      else if (specialCardsMode) mode = "custom";
+
+      const customFlags = rolesMode && specialCardsMode
+        ? { roles: true, specialCards: true }
+        : specialCardsMode
+        ? { roles: false, specialCards: true }
+        : undefined;
+
+      navigate("/game", {
+        state: {
+          gameId,
+          isResuming: true,
+          mode,
+          ...(customFlags ? { customFlags } : {}),
+        },
+      });
+    } catch (err) {
+      console.warn("No se pudo obtener info de partida, navegando sin mode:", err);
+      navigate("/game", { state: { gameId, isResuming: true } });
+    }
   };
 
   return (

@@ -33,7 +33,6 @@ const RoleCard = ({ role, isRevealed = false }) => {
 
   const roleName = role.role?.name || "Rol";
   const roleDescription = role.role?.description || "Sin descripción";
-  const roleImage = role.role?.icon;
   const maxUses = role?.maxUses ?? 0;
   const uses = role?.uses ?? 0;
   const remainingUses = maxUses > 0 ? Math.max(maxUses - uses, 0) : 0;
@@ -62,20 +61,12 @@ const RoleCard = ({ role, isRevealed = false }) => {
         <div className="role-card role-face-front">
           <div className="role-card-inner">
             <div className="role-icon-large">
-              {roleImage ? (
-                <img
-                  src={`/assets/roles/${roleImage}`}
-                  alt={roleName}
-                  onError={(e) => e.currentTarget.remove()}
-                />
-              ) : (
-                <motion.span
-                  animate={showBurst ? { scale: [1, 1.4, 1], filter: ["drop-shadow(0 0 0px #00e5ff)", "drop-shadow(0 0 20px #00e5ff)", "drop-shadow(0 0 6px #00e5ff)"] } : {}}
-                  transition={{ duration: 0.7 }}
-                >
-                  🎭
-                </motion.span>
-              )}
+              <motion.span
+                animate={showBurst ? { scale: [1, 1.4, 1], filter: ["drop-shadow(0 0 0px #00e5ff)", "drop-shadow(0 0 20px #00e5ff)", "drop-shadow(0 0 6px #00e5ff)"] } : {}}
+                transition={{ duration: 0.7 }}
+              >
+                🎭
+              </motion.span>
             </div>
             <h3 className="role-name">{roleName}</h3>
             <p className="role-description">{roleDescription}</p>

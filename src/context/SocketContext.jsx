@@ -1,7 +1,6 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState, useRef, useCallback } from "react";
 import { io } from "socket.io-client";
 import { toast } from "sonner";
-import { getConnectedFriends } from "../services/userService";
 
 const SocketContext = createContext(null);
 
@@ -9,65 +8,47 @@ export const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
   const [pendingRequests, setPendingRequests] = useState([]);
   const [onlineFriends, setOnlineFriends] = useState([]);
+  const socketRef = useRef(null);
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) return;
+  const setupSocket = useCallback((token) => {
+    if (socketRef.current?.connected) return;
 
     const socketInstance = io("http://localhost:3000", {
       auth: { token }
     });
 
+    socketRef.current = socketInstance;
     setSocket(socketInstance);
-
-    const fetchOnlineFriends = async () => {
-      try {
-        const data = await getConnectedFriends();
-        
-        console.log("🟢 Datos amigos online:", data);
-
-        const mappedNames = Array.isArray(data) 
-          ? data.map(f => typeof f === 'object' ? (f.nombre_usuario || f.name) : f)
-          : [];
-          
-        setOnlineFriends(mappedNames);
-      } catch (e) {
-        console.error("Error al obtener amigos online:", e);
-      }
-    };
 
     socketInstance.on("connect", () => {
       socketInstance.emit("pendingFriendRequests", {});
-      fetchOnlineFriends();
+      socketInstance.emit("avisarAmigosConectados_UserOnline");
     });
 
-socketInstance.on("listaAmigosInicial", (listaNombres) => {
-      console.log("📥 Recibida lista inicial de amigos online:", listaNombres);
-      setOnlineFriends(listaNombres); 
+    socketInstance.on("listaAmigosInicial", (listaNombres) => {
+      setOnlineFriends(Array.isArray(listaNombres) ? listaNombres : []);
     });
+
     socketInstance.on("amigoConectado", (nombre) => {
-      console.log("🟢 Amigo se acaba de conectar:", nombre);
-      setOnlineFriends((prev) => {
-        if (!prev.includes(nombre)) return [...prev, nombre];
-        return prev;
-      });
+      setOnlineFriends((prev) =>
+        prev.includes(nombre) ? prev : [...prev, nombre]
+      );
     });
 
     socketInstance.on("amigoDesconectado", (data) => {
-      console.log("🔌 SOCKET: Evento amigoDesconectado recibido:", data);
-      const nombre = typeof data === 'object' ? (data.nombre_usuario || data.name) : data;
-      setOnlineFriends((prev) => prev.filter(name => name !== nombre));
+      const nombre = typeof data === "object" ? (data.nombre_usuario || data.name) : data;
+      setOnlineFriends((prev) => prev.filter((n) => n !== nombre));
     });
 
     socketInstance.on("res_pendingFriendRequests", (data) => {
       if (Array.isArray(data)) {
-        const mappedReqs = data.map(req => ({
+        setPendingRequests(data.map(req => ({
           id: req.id_usuario_origen,
           name: req.nombre_usuario || req.id_usuario_origen,
-          coins: 0,
-          icon: req.image || "👤"
-        }));
-        setPendingRequests(mappedReqs);
+          coins: req.monedas ?? 0,
+          avatarId: req.avatar ?? null,
+          icon: "👤"
+        })));
       }
     });
 
@@ -77,18 +58,41 @@ socketInstance.on("listaAmigosInicial", (listaNombres) => {
     });
 
     socketInstance.on("mostrarAceptadaFriendRequest", (data) => {
-      const nombreAmigo = data || "Un usuario";
-      toast.success(`¡${nombreAmigo} ha aceptado tu solicitud de amistad! 🎉`);
+      toast.success(`¡${data || "Un usuario"} ha aceptado tu solicitud de amistad! 🎉`);
     });
 
     socketInstance.on("mostrarRechazadaFriendRequest", (data) => {
-      const nombreAmigo = data || "Un usuario";
-      toast.error(`Tu solicitud a ${nombreAmigo} fue rechazada. ❌`);
+      toast.error(`Tu solicitud a ${data || "un usuario"} fue rechazada. ❌`);
     });
+  }, []);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) setupSocket(token);
 
     return () => {
-      socketInstance.disconnect();
+      if (socketRef.current) {
+        socketRef.current.emit("avisarAmigosConectados_UserDisconnect");
+        socketRef.current.disconnect();
+        socketRef.current = null;
+      }
     };
+  }, [setupSocket]);
+
+  const connectSocket = useCallback(() => {
+    const token = localStorage.getItem("token");
+    if (token) setupSocket(token);
+  }, [setupSocket]);
+
+  const disconnectSocket = useCallback(() => {
+    const s = socketRef.current;
+    if (s) {
+      s.emit("avisarAmigosConectados_UserDisconnect");
+      s.disconnect();
+      socketRef.current = null;
+      setSocket(null);
+      setOnlineFriends([]);
+    }
   }, []);
 
   const sendNewFriendRequest = (friendId) => {
@@ -107,15 +111,17 @@ socketInstance.on("listaAmigosInicial", (listaNombres) => {
     if (socket) socket.emit("unirse_room_partida", partidaID);
   };
 
-  const value = { 
-    pendingRequests, 
-    setPendingRequests, 
+  const value = {
+    pendingRequests,
+    setPendingRequests,
     onlineFriends,
-    sendNewFriendRequest, 
-    sendFriendRequestAccepted, 
-    sendFriendRequestRejected, 
+    connectSocket,
+    disconnectSocket,
+    sendNewFriendRequest,
+    sendFriendRequestAccepted,
+    sendFriendRequestRejected,
     joinGameRoom,
-    socket 
+    socket
   };
 
   return (
