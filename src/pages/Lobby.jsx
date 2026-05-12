@@ -31,6 +31,7 @@ const Lobby = () => {
     roomCode,
     gameId,
     isIA,
+    isPublic,
     players: playersFromState,
     customFlags: customFlagsFromState,
   } = location.state || {};
@@ -127,10 +128,12 @@ const Lobby = () => {
   const refreshRef = useRef(refreshData);
   const modeRef = useRef(mode);
   const customFlagsRef = useRef(null);
+  const isPublicRef = useRef(isPublic);
   useEffect(() => { navigateRef.current = navigate; }, [navigate]);
   useEffect(() => { refreshRef.current = refreshData; }, [refreshData]);
   useEffect(() => { modeRef.current = mode; }, [mode]);
   useEffect(() => { customFlagsRef.current = customFlags; }, [customFlags]);
+  useEffect(() => { isPublicRef.current = isPublic; }, [isPublic]);
 
   useEffect(() => {
     if (!socket || !gameId) return;
@@ -147,6 +150,7 @@ const Lobby = () => {
           mode: gameMode,
           manoInicial: data.manoInicial,
           customFlags: customFlagsRef.current,
+          isPublic: isPublicRef.current,
         },
         replace: true,
       });

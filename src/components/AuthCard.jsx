@@ -7,9 +7,11 @@ import "../styles/Profile.css";
 import "../styles/SettingsModal.css";
 
 import { registerUser, loginUser as loginApi, changePassword } from "../services/authService";
+import { useSocket } from "../context/SocketContext";
 
 const AuthCard = () => {
   const navigate = useNavigate();
+  const { connectSocket } = useSocket();
 
   const [loginName, setLoginName] = useState(""); 
   const [signupUser, setSignupUser] = useState("");
@@ -29,6 +31,7 @@ const AuthCard = () => {
       const data = await loginApi(loginName, password);
       localStorage.setItem("token", data.token);
       localStorage.setItem("username", data.user.nombre_usuario);
+      connectSocket();
       playSound("success");
       toast.success(`¡Bienvenido de nuevo, ${data.user.nombre_usuario}!`, {
         description: "Sesión iniciada correctamente.",
@@ -52,6 +55,7 @@ const AuthCard = () => {
       const data = await registerUser(signupUser, email, password);
       localStorage.setItem("token", data.token);
       localStorage.setItem("username", data.user.nombre_usuario);
+      connectSocket();
       playSound("success");
       toast.success(`¡Cuenta creada, ${data.user.nombre_usuario}!`, {
         description: "Usuario registrado en la base de datos.",

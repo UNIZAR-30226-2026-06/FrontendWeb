@@ -14,7 +14,8 @@ import {
   getFriendsCount,
   updateBasicProfile,
 } from "../services/userService";
-import { changePassword } from "../services/authService";
+import { changePassword, logoutUser } from "../services/authService";
+import { useSocket } from "../context/SocketContext";
 import "../styles/Profile.css";
 
 const normalizeImage = (img) => {
@@ -27,6 +28,7 @@ const normalizeImage = (img) => {
 const Profile = () => {
   const navigate = useNavigate();
   const scrollRef = useRef(null);
+  const { disconnectSocket } = useSocket();
 
   const [user, setUser] = useState(null);
   const [myAvatars, setMyAvatars] = useState([]);
@@ -35,6 +37,8 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
 
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [logoutLoading, setLogoutLoading] = useState(false);
   const [editTab, setEditTab] = useState("correo");
   const [editCorreo, setEditCorreo] = useState("");
   const [editPwActual, setEditPwActual] = useState("");
@@ -158,6 +162,18 @@ const Profile = () => {
     }
   };
 
+  const handleLogout = async () => {
+    setLogoutLoading(true);
+    try {
+      await logoutUser();
+    } catch {
+    } finally {
+      disconnectSocket(); 
+      localStorage.clear();
+      navigate("/");
+    }
+  };
+
   const handleWheel = (e) => {
     if (scrollRef.current) scrollRef.current.scrollLeft += e.deltaY;
   };
@@ -233,6 +249,12 @@ const Profile = () => {
               />
             ))}
           </div>
+        </div>
+
+        <div className="logout-section">
+          <button className="btn-logout" onClick={() => setShowLogoutModal(true)}>
+            🚪 Cerrar Sesión
+          </button>
         </div>
 
       </div>
@@ -315,6 +337,32 @@ const Profile = () => {
                 </button>
               </div>
             )}
+          </div>
+        </div>
+      )}
+      {showLogoutModal && (
+        <div className="modal-overlay" onClick={() => setShowLogoutModal(false)}>
+          <div className="edit-profile-panel logout-confirm-panel" onClick={e => e.stopPropagation()}>
+            <button className="close-modal-x" onClick={() => setShowLogoutModal(false)}>✖</button>
+            <div className="logout-confirm-icon">🚪</div>
+            <h2 className="settings-title-green">CERRAR SESIÓN</h2>
+            <p className="logout-confirm-text">¿Seguro que quieres cerrar sesión?</p>
+            <div className="logout-confirm-actions">
+              <button
+                className="edit-save-btn logout-confirm-yes"
+                onClick={handleLogout}
+                disabled={logoutLoading}
+              >
+                {logoutLoading ? "Saliendo..." : "Sí, salir"}
+              </button>
+              <button
+                className="edit-save-btn logout-confirm-no"
+                onClick={() => setShowLogoutModal(false)}
+                disabled={logoutLoading}
+              >
+                Cancelar
+              </button>
+            </div>
           </div>
         </div>
       )}
