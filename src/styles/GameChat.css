@@ -1,6 +1,6 @@
 .game-chat-container {
   position: fixed;
-  right: 20px;
+  right: 95px;
   bottom: 20px;
   width: 300px;
   height: 400px;
@@ -11,6 +11,14 @@
   flex-direction: column;
   box-shadow: 0 0 20px rgba(0, 229, 255, 0.3);
   z-index: 1000;
+}
+
+@media (max-width: 768px) {
+  .game-chat-container {
+    right: 76px;
+    width: calc(100vw - 90px);
+    max-width: 300px;
+  }
 }
 
 .game-chat-header {
