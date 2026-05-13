@@ -20,7 +20,8 @@ export const SocketProvider = ({ children }) => {
 
     // 2. Usamos la variable SOCKET_URL en lugar del localhost escrito a mano
     const socketInstance = io(SOCKET_URL, {
-      auth: { token }
+      auth: { token },
+      transports: ["websocket"] // 🚀 ESTA ES LA LÍNEA MÁGICA
     });
 
     socketRef.current = socketInstance;
