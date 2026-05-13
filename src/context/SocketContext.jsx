@@ -13,7 +13,7 @@ export const SocketProvider = ({ children }) => {
   const setupSocket = useCallback((token) => {
     if (socketRef.current?.connected) return;
 
-    const socketInstance = io("http://localhost:3000", {
+    const socketInstance = io(import.meta.env.VITE_SOCKET_URL ?? "http://localhost:3000", {
       auth: { token }
     });
 

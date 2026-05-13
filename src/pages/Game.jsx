@@ -31,9 +31,7 @@ const Game = () => {
 
   const { gameId, mode, isPublic, manoInicial, customFlags } = location.state || {};
 
-  const rolesActivos = mode === "custom"
-    ? !!customFlags?.roles
-    : mode === "roles";
+  const rolesActivosLocal = mode === "custom" ? !!customFlags?.roles : mode === "roles";
 
   const [showSettings, setShowSettings] = useState(false);
   const [showChat, setShowChat] = useState(false);
@@ -41,6 +39,7 @@ const Game = () => {
   const [unreadCount, setUnreadCount] = useState(0);
   const [gameOver, setGameOver] = useState(null);
   const [gameState, setGameState] = useState(null);
+  const rolesActivos = gameState?.rolesMode ?? rolesActivosLocal;
   const [currentUser, setCurrentUser] = useState(null);
   const [activeStyle, setActiveStyle] = useState("basic");
   const [myAvatar, setMyAvatar] = useState(null);

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "../styles/SettingsModal.css";
 
 const MODE_INFO = {
@@ -19,13 +19,31 @@ const MODE_INFO = {
   },
 };
 
-const SettingsModal = ({ onClose, mode, customFlags, isPublic }) => {
-  const SwitchOption = ({ label }) => (
+const getSetting = (key, def = true) => {
+  const v = localStorage.getItem(`setting_${key}`);
+  return v === null ? def : v === "true";
+};
+
+const SettingsModal = ({ onClose, mode }) => {
+  const [sound,     setSound]     = useState(() => getSetting("sound"));
+  const [music,     setMusic]     = useState(() => getSetting("music"));
+  const [vibration, setVibration] = useState(() => getSetting("vibration"));
+
+  const toggle = (key, value, setter) => {
+    setter(value);
+    localStorage.setItem(`setting_${key}`, String(value));
+  };
+
+  const SwitchOption = ({ label, checked, onChange }) => (
     <div className="setting-option-row">
       <span className="setting-text">{label}</span>
       <label className="switch-button">
         <div className="switch-outer">
-          <input type="checkbox" defaultChecked={label !== "SONIDO"} />
+          <input
+            type="checkbox"
+            checked={checked}
+            onChange={e => onChange(e.target.checked)}
+          />
           <div className="button-content">
             <div className="button-toggle"></div>
             <div className="button-indicator"></div>
@@ -56,9 +74,21 @@ const SettingsModal = ({ onClose, mode, customFlags, isPublic }) => {
 
         <div className="settings-body">
           <div className="switches-container">
-            <SwitchOption label="MÚSICA" />
-            <SwitchOption label="VIBRACIÓN" />
-            <SwitchOption label="SONIDO" />
+            <SwitchOption
+              label="MÚSICA"
+              checked={music}
+              onChange={v => toggle("music", v, setMusic)}
+            />
+            <SwitchOption
+              label="VIBRACIÓN"
+              checked={vibration}
+              onChange={v => toggle("vibration", v, setVibration)}
+            />
+            <SwitchOption
+              label="SONIDO"
+              checked={sound}
+              onChange={v => toggle("sound", v, setSound)}
+            />
           </div>
         </div>
       </div>

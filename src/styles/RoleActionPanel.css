@@ -76,6 +76,14 @@
   border-radius: 0 0 12px 12px;
   background: rgba(5, 10, 30, 0.97);
   backdrop-filter: blur(12px);
+  max-height: min(55vh, 420px);
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.rap-panel::-webkit-scrollbar {
+  display: none;
 }
 
 .rap-panel-inner {
