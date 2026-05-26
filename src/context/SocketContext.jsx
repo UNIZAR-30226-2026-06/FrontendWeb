@@ -2,11 +2,6 @@ import React, { createContext, useContext, useEffect, useState, useRef, useCallb
 import { io } from "socket.io-client";
 import { toast } from "sonner";
 
-// 1. Calculamos la URL base dinámica quitando el '/api/v1' de la variable de entorno
-const SOCKET_URL = import.meta.env.VITE_API_URL 
-  ? import.meta.env.VITE_API_URL.replace('/api/v1', '') 
-  : "http://localhost:3000";
-
 const SocketContext = createContext(null);
 
 export const SocketProvider = ({ children }) => {
@@ -18,8 +13,7 @@ export const SocketProvider = ({ children }) => {
   const setupSocket = useCallback((token) => {
     if (socketRef.current?.connected) return;
 
-    // 2. Usamos la variable SOCKET_URL en lugar del localhost escrito a mano
-    const socketInstance = io(SOCKET_URL, {
+    const socketInstance = io("http://localhost:3000", {
       auth: { token }
     });
 
